@@ -32,7 +32,7 @@ class CreateTest extends FunctionalTestCase
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
             'json' => [
-                'email' => 'jared@attendo.com',
+                'email' => 'jared@test.com',
                 'role' => Role::AGENT->value,
             ],
         ]);
@@ -49,7 +49,7 @@ class CreateTest extends FunctionalTestCase
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
             'json' => [
-                'email' => 'jared@attendo.com',
+                'email' => 'jared@test.com',
             ],
         ]);
 
@@ -58,7 +58,7 @@ class CreateTest extends FunctionalTestCase
         $json = $response->toArray(false);
 
         self::assertSame('BAD_REQUEST', $json['error']);
-        self::assertSame("type: This value should not be blank.\nrole: This value should not be blank.\nlocale: This value should not be blank.\ntimezone: This value should not be blank.", $json['message']);
+        self::assertSame("role: This value should not be blank.", $json['message']);
     }
 
     public function test_create_user_bad_request_with_invalid_email(): void
@@ -84,7 +84,7 @@ class CreateTest extends FunctionalTestCase
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
             'json' => [
-                'email' => 'jared@attendo.com',
+                'email' => 'jared@test.com',
                 'role' => 'wrong_role',
             ],
         ]);
@@ -117,6 +117,6 @@ class CreateTest extends FunctionalTestCase
         $json = $response->toArray(false);
 
         self::assertSame('USER_ALREADY_EXISTS', $json['error']);
-        self::assertSame('User test@attendo.com already exists', $json['message']);
+        self::assertSame('User test@test.com already exists', $json['message']);
     }
 }

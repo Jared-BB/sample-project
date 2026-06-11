@@ -11,7 +11,7 @@ class UserStory extends Story
 {
     public function build(): void
     {
-        $user = UserFactory::createOne(['email' => 'test@attendo.com', 'password' => 'PasswordOk1']);
+        $user = UserFactory::createOne(['email' => 'test@test.com', 'password' => 'PasswordOk1']);
         $this->addState('user', $user);
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Factory\Access\Group;
 
+use App\Access\Application\DTO\GroupPermissionCollection;
 use App\Access\Domain\Group;
 use App\Access\Domain\ValueObject\Name;
-use AttendoPolar\Shared\Application\DTO\Access\GroupPermissionCollection;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 

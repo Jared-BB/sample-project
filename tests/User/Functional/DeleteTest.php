@@ -8,6 +8,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Shared\Domain\EventStore;
 use App\Tests\FunctionalTestCase;
 use App\Tests\Story\User\UserStory;
+use App\Tests\Story\User\UserWithUserPermissions;
 use App\User\Domain\Event\UserDeletedEvent;
 use App\User\Domain\User;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,10 +31,10 @@ class DeleteTest extends FunctionalTestCase
 
     public function test_delete_user_ok(): void
     {
-        UserStory::load();
+        UserWithUserPermissions::load();
 
         /** @var User $user */
-        $user = UserStory::get('user');
+        $user = UserWithUserPermissions::get('user');
 
         EventStore::clear();
 
@@ -76,10 +77,10 @@ class DeleteTest extends FunctionalTestCase
 
     public function test_delete_user_when_user_not_exists(): void
     {
-        UserStory::load();
+        UserWithUserPermissions::load();
 
         /** @var User $user */
-        $user = UserStory::get('user');
+        $user = UserWithUserPermissions::get('user');
 
         $userId = Uuid::v7();
 
