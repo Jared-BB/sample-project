@@ -1,0 +1,12 @@
+App\Auth\Infrastructure\UI\Login\Response\LoginResponse:
+    operations:
+        ApiPlatform\Metadata\Post:
+            uriTemplate: /v1/login
+            status: 200
+            input: App\Auth\Infrastructure\UI\Login\Request\LoginRequest
+            output: App\Auth\Infrastructure\UI\Login\Response\LoginResponse
+            processor: App\Auth\Infrastructure\UI\Login\LoginProcessor
+            read: false
+            deserialize: true
+            validate: true
+            paginationEnabled: false

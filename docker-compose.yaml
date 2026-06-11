@@ -1,0 +1,74 @@
+services:
+    php:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        platform: linux/x86_64
+        container_name: sample-php
+        volumes:
+            - ./:/var/www/sample
+        env_file:
+            - .env
+        ports:
+            - "8000:80"
+        depends_on:
+            - postgres
+            - rabbitmq
+            - redis
+            - elasticsearch
+
+    postgres:
+        platform: linux/x86_64
+        image: postgres:16-alpine
+        container_name: sample-postgres
+        environment:
+            POSTGRES_USER: sample
+            POSTGRES_PASSWORD: pSample1
+            POSTGRES_DB: sample
+        ports:
+            - "5432:5432"
+        volumes:
+            - pg_data:/var/lib/postgresql/data
+
+    rabbitmq:
+        platform: linux/x86_64
+        image: rabbitmq:4.1-management
+        container_name: sample-rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: sample
+            RABBITMQ_DEFAULT_PASS: pSample1
+            RABBITMQ_DEFAULT_VHOST: sample
+        command: >
+            sh -c "rabbitmq-plugins enable --offline rabbitmq_shovel rabbitmq_shovel_management &&
+                   rabbitmq-server"
+
+    redis:
+        platform: linux/x86_64
+        image: redis:7-alpine
+        container_name: sample-redis
+        ports:
+            - "6379:6379"
+
+    elasticsearch:
+        platform: linux/x86_64
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+        container_name: sample-elasticsearch
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        ports:
+            - "9200:9200"
+        volumes:
+            - es_data:/usr/share/elasticsearch/data
+
+volumes:
+    pg_data:
+    es_data:

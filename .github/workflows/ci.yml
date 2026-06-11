@@ -1,0 +1,96 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - '**'
+    pull_request:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:16
+                env:
+                    POSTGRES_DB: sample
+                    POSTGRES_USER: sample
+                    POSTGRES_PASSWORD: pSample1
+                options: >-
+                    --health-cmd="pg_isready -U sample -d sample"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+                ports:
+                    - 5432:5432
+
+        env:
+            APP_ENV: test
+            DATABASE_URL: 'postgresql://sample:pSample1@127.0.0.1:5432/sample?serverVersion=16&charset=utf8'
+            JWT_PASSPHRASE: ''
+
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: mbstring, intl, pdo_pgsql
+                  coverage: xdebug
+
+            - name: Setup SSH for private dependencies
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.DEPENDENCIES_DEPLOY_KEY }}
+
+            - name: Trust github.com host key
+              run: |
+                  mkdir -p ~/.ssh
+                  ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-progress --prefer-source
+
+            - name: Generate JWT keys
+              run: php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction
+
+            - name: Run database migrations
+              run: php bin/console doctrine:migrations:migrate --no-interaction
+
+            - name: Map hostname "postgres" to localhost
+              run: echo "127.0.0.1 postgres" | sudo tee -a /etc/hosts
+
+            - name: Run PHPUnit with coverage
+              shell: bash
+              run: |
+                  set -o pipefail
+
+                  XDEBUG_MODE=coverage php bin/phpunit tests/ \
+                    --coverage-text | tee coverage.txt
+
+                  echo "## PHPUnit Coverage" >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
+                  grep -A 20 "Code Coverage Report" coverage.txt >> $GITHUB_STEP_SUMMARY || cat coverage.txt >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
+
+            - name: Run PHPStan
+              run: php -d memory_limit=1G vendor/bin/phpstan analyze src tests --memory-limit=1G
+
+            - name: Run PHP CS Fixer (dry-run)
+              run: vendor/bin/php-cs-fixer fix --dry-run --diff

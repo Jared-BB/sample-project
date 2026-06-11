@@ -1,0 +1,14 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+Options -Indexes
+
+<FilesMatch "(^\.|composer\.(json|lock)|package\.json|symfony\.lock|\.env.*|phpunit\.xml.*|README.*|LICENSE.*)">
+    Require all denied
+</FilesMatch>

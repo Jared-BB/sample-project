@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "access_group_user" CASCADE;
+DROP TABLE IF EXISTS "access_group_permission" CASCADE;
+DROP TABLE IF EXISTS "access_group" CASCADE;

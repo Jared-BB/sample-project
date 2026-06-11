@@ -1,0 +1,20 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $eventsBus: '@events.bus'
+            #$commandsBus: '@commands.bus'
+            $queryBus: '@query.bus'
+
+    App\:
+        resource: '../src/'
+
+    App\Shared\Infrastructure\Http\ApiExceptionSubscriber:
+        arguments:
+            $errorsLogger: '@monolog.logger.errors'
+
+    App\Shared\Application\Service\Encryptor:
+        arguments: ['%env(base64:ENCRYPT_KEY)%']

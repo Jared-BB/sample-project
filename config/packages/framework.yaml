@@ -1,0 +1,24 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    session: true
+
+when@test:
+    framework:
+        test: true
+        profiler: false
+        http_method_override: false
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+
+        # No vuelques errores PHP a la salida (stderr) durante los tests
+        php_errors:
+            log: false
+
+        # Bajar nivel de log de excepciones típicas en tests
+        exceptions:
+            ApiPlatform\Validator\Exception\ValidationException:
+                log_level: info
+            Symfony\Component\HttpKernel\Exception\NotFoundHttpException:
+                log_level: info
+            Exception:
+                log_level: info

@@ -1,0 +1,66 @@
+framework:
+    messenger:
+        transports:
+            commands:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                serializer: App\Shared\Infrastructure\Message\JsonSerializer
+                failure_transport: commands.dead
+                options:
+                    queues:
+                        commands: ~
+                    exchange:
+                        name: commands
+                        type: direct
+                    delay:
+                        exchange_name: delays
+                retry_strategy:
+                    max_retries: 6
+                    delay: 300000
+                    multiplier: 1
+                    max_delay: 0
+            events:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                serializer: App\Shared\Infrastructure\Message\JsonSerializer
+                failure_transport: events.dead
+                options:
+                    queues:
+                        events: ~
+                    exchange:
+                        name: events
+                        type: direct
+                retry_strategy:
+                    max_retries: 0
+            commands.dead:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    queues:
+                        commands.dead:
+                            binding_keys: ['commands']
+                    exchange:
+                        name: commands.dead
+                        type: direct
+            events.dead:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    queues:
+                        events.dead:
+                            binding_keys: ['events']
+                    exchange:
+                        name: events.dead
+                        type: direct
+
+        routing:
+            App\Shared\Domain\EventInterface: events
+            App\Shared\Application\AsyncCommandInterface: commands
+
+        default_bus: commands.bus
+        buses:
+            commands.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - App\Shared\Application\EventDispatcherMiddleware
+            query.bus:
+                default_middleware: allow_no_handlers
+            events.bus:
+                default_middleware: allow_no_handlers

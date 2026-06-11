@@ -1,0 +1,150 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\User\Domain;
+
+use App\Shared\Domain\EventStore;
+use App\User\Domain\Event\UserCreatedEvent;
+use App\User\Domain\Event\UserDeletedEvent;
+use App\User\Domain\Event\UserDisabledEvent;
+use App\User\Domain\ValueObject\Email;
+use App\User\Domain\ValueObject\Password;
+use App\User\Domain\ValueObject\Role;
+use App\User\Infrastructure\Persistence\PostgresqlUserRepository;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
+
+#[ORM\Entity(repositoryClass: PostgresqlUserRepository::class)]
+#[ORM\Table(name: '`user`')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'uuid', unique: true, nullable: false)]
+    private Uuid $id;
+
+    #[ORM\Column(name: 'email', type: Types::STRING, length: 254, nullable: false)]
+    private string $email;
+
+    #[ORM\Embedded(class: Password::class, columnPrefix: false)]
+    private Password $password;
+
+    #[ORM\Column(name: 'role', type: Types::STRING, length: 50, nullable: false, enumType: Role::class)]
+    private Role $role;
+
+    #[ORM\Column(name: 'enabled', type: Types::BOOLEAN, nullable: false)]
+    private bool $enabled = true;
+
+    #[ORM\Column(name: 'deleted', type: Types::BOOLEAN, nullable: false)]
+    private bool $deleted = false;
+
+    #[ORM\Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
+    private DateTimeImmutable $createdAt;
+
+    public function __construct(
+        Uuid $id,
+        Email $email,
+        Role $role,
+    ) {
+        $this->id = $id;
+        $this->email = $email->asString();
+        $this->role = $role;
+        $this->createdAt = new DateTimeImmutable();
+
+        EventStore::addEvent(
+            new UserCreatedEvent(
+                id: $id,
+            )
+        );
+    }
+
+    public function id(): Uuid
+    {
+        return $this->id;
+    }
+
+    public function email(): Email
+    {
+        return new Email($this->email);
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->role->value];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function password(): Password
+    {
+        return $this->password;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password->asString();
+    }
+
+    public function role(): Role
+    {
+        return $this->role;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function addPassword(Password $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function delete(): void
+    {
+        $this->deleted = true;
+
+        EventStore::addEvent(
+            new UserDeletedEvent(
+                id: $this->id(),
+            )
+        );
+    }
+
+    public function disable(): void
+    {
+        $this->enabled = false;
+
+        EventStore::addEvent(
+            new UserDisabledEvent(
+                id: $this->id(),
+            )
+        );
+    }
+}

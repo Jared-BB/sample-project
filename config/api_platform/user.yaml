@@ -1,0 +1,34 @@
+App\User\Domain\User:
+    operations:
+        ApiPlatform\Metadata\Post:
+            uriTemplate: /v1/user
+            status: 201
+            input: App\User\Infrastructure\UI\Create\Request\CreateRequest
+            output: false
+            processor: App\User\Infrastructure\UI\Create\CreateProcessor
+            read: false
+            deserialize: true
+            validate: true
+
+        ApiPlatform\Metadata\Delete:
+            uriTemplate: /v1/user/{id}
+            status: 202
+            input: false
+            output: false
+            processor: App\User\Infrastructure\UI\Delete\DeleteProcessor
+            read: false
+            deserialize: false
+            validate: false
+            requirements:
+                id: '^[0-9a-fA-F-]{36}$'
+
+        ApiPlatform\Metadata\GetCollection:
+            uriTemplate: /v1/users
+            status: 200
+            input: false
+            output: App\User\Infrastructure\UI\List\Response\UserItemResponse
+            provider: App\User\Infrastructure\UI\List\ListProvider
+            read: true
+            deserialize: false
+            validate: false
+            paginationEnabled: true
