@@ -8,7 +8,6 @@ start: ## Setup the project
 	$(DOCKER_COMPOSE) -f docker-compose.yaml up -d && \
 	$(EXEC_PHP) php composer.phar update --dev -vvv && \
 	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction && \
-	$(SYMFONY_CONSOLE) test:setup --no-interaction && \
 	$(SYMFONY_CONSOLE) lexik:jwt:generate-keypair --skip-if-exists --no-interaction && \
 	echo "Waiting for RabbitMQ to start..."
 	while ! docker exec -it sample-rabbitmq rabbitmqctl status &> /dev/null; do \

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Shared\Application\Security;
+namespace App\User\Domain;
 
-use App\User\Domain\User;
 use Symfony\Component\Uid\Uuid;
 
 interface LoggedUserProviderInterface

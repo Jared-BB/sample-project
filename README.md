@@ -13,6 +13,14 @@ git clone https://github.com/Jared-BB/sample-project
 make start
 ```
 ---
+Check de doc in a browser
+```
+http://localhost:8000/api/docs
+```
+RabbitMQ queues can be checked in:
+```
+http://localhost:15672/#/
+```
 Run the tests!
 ```
 php bin/phpunit

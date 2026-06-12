@@ -6,9 +6,7 @@ namespace App\Access\Domain;
 
 use App\Access\Application\DTO\GroupPermissionCollection;
 use App\Access\Domain\Event\GroupCreatedEvent;
-use App\Access\Domain\Event\GroupUpdatedEvent;
 use App\Access\Domain\GroupPermission\GroupPermission;
-use App\Access\Domain\GroupPermission\ValueObject\Context;
 use App\Access\Domain\GroupUser\Event\GroupUserDeletedEvent;
 use App\Access\Domain\GroupUser\GroupUser;
 use App\Access\Domain\ValueObject\Name;
@@ -90,38 +88,6 @@ class Group
         return $this->createdAt;
     }
 
-    /**
-     * @return GroupPermission[]
-     */
-    public function permissionsByContext(Context $context): array
-    {
-        $permissions = [];
-        /** @var GroupPermission $groupPermission */
-        foreach ($this->permissions->toArray() as $groupPermission) {
-            if ($groupPermission->context()->value === $context->value) {
-                $permissions[] = $groupPermission;
-            }
-        }
-
-        return $permissions;
-    }
-
-    /**
-     * @return GroupPermission[]
-     */
-    public function permissionsByObject(Uuid $objectId): array
-    {
-        $permissions = [];
-        /** @var GroupPermission $groupPermission */
-        foreach ($this->permissions->toArray() as $groupPermission) {
-            if ($groupPermission->objectId()?->equals($objectId)) {
-                $permissions[] = $groupPermission;
-            }
-        }
-
-        return $permissions;
-    }
-
     public function users(): array
     {
         return $this->users->toArray();
@@ -160,34 +126,5 @@ class Group
                 return;
             }
         }
-    }
-
-    public function update(Name $name, GroupPermissionCollection $permissionCollection): void
-    {
-        $this->name = $name;
-
-        $this->permissions->clear();
-        $this->addPermissions($permissionCollection);
-    }
-
-    public function addPermissions(GroupPermissionCollection $permissionCollection): void
-    {
-        foreach ($permissionCollection->items() as $permissionDto) {
-            $this->permissions->add(
-                new GroupPermission(
-                    id: Uuid::v7(),
-                    group: $this,
-                    context: $permissionDto->context,
-                    permission: $permissionDto->permission,
-                    objectId: $permissionDto->objectId,
-                )
-            );
-        }
-
-        EventStore::addEvent(
-            new GroupUpdatedEvent(
-                id: $this->id(),
-            )
-        );
     }
 }
