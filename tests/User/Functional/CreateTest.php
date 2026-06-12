@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\User\Functional;
 
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Access\Domain\Event\GroupCreatedEvent;
+use App\Access\Domain\GroupUser\Event\GroupUserAddedEvent;
 use App\Tests\FunctionalTestCase;
 use App\Tests\Story\User\UserStory;
 use App\User\Domain\Event\UserCreatedEvent;
@@ -41,8 +43,10 @@ class CreateTest extends FunctionalTestCase
         self::assertSame(Response::HTTP_CREATED, $response->getStatusCode());
 
         $events = self::getEvents();
-        self::assertCount(1, $events);
+        self::assertCount(3, $events);
         self::assertInstanceOf(UserCreatedEvent::class, $events[0]);
+        self::assertInstanceOf(GroupCreatedEvent::class, $events[1]);
+        self::assertInstanceOf(GroupUserAddedEvent::class, $events[2]);
     }
 
     public function test_create_user_bad_request(): void
