@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Application\Command;
 
+use App\User\Application\Port\AccessProvisioner;
 use App\User\Domain\Exception\UserAlreadyExistsException;
 use App\User\Domain\User;
 use App\User\Domain\UserRepository;
@@ -17,6 +18,7 @@ final readonly class CreateCommandHandler
     public function __construct(
         private UserRepository $userRepository,
         private UserPasswordHasherInterface $hasher,
+        private AccessProvisioner $accessProvisioner,
     ) {
     }
 
@@ -38,5 +40,7 @@ final readonly class CreateCommandHandler
         );
 
         $this->userRepository->save($user);
+
+        $this->accessProvisioner->provisionForUser($user->id());
     }
 }

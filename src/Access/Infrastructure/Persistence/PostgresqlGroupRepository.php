@@ -70,4 +70,10 @@ class PostgresqlGroupRepository extends ServiceEntityRepository implements Group
 
         return $qb->getQuery()->getOneOrNullResult() !== null;
     }
+
+    public function save(Group $group): void
+    {
+        $this->getEntityManager()->persist($group);
+        $this->getEntityManager()->flush();
+    }
 }

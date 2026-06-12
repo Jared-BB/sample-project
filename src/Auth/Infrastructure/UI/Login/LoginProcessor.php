@@ -9,7 +9,6 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Auth\Application\Command\LoginCommand;
 use App\Auth\Infrastructure\UI\Login\Response\LoginResponse;
 use App\User\Domain\ValueObject\Email;
-use App\User\Domain\ValueObject\Password;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -30,7 +29,7 @@ final class LoginProcessor implements ProcessorInterface
             $token = $this->handle(
                 new LoginCommand(
                     email: new Email($data->email),
-                    password: new Password($data->password),
+                    password: $data->password,
                 )
             );
         } catch (HandlerFailedException $exception) {

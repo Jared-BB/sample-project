@@ -13,4 +13,6 @@ interface GroupRepository
         Uuid $userId,
         GroupPermissionCollection $permissionCollection,
     ): bool;
+
+    public function save(Group $group): void;
 }

@@ -92,7 +92,7 @@ class LoginTest extends FunctionalTestCase
             'headers' => self::basicHeaders(),
             'json' => [
                 'email' => $user->email()->asString(),
-                'password' => 'wrong_password',
+                'password' => 'WrongPassword1',
             ],
         ]);
 

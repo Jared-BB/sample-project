@@ -24,7 +24,7 @@ final readonly class LoginCommandHandler
     {
         $user = $this->userRepository->findByEmailOrFail($command->email);
 
-        if ( ! $this->hasher->isPasswordValid($user, $command->password->asString())) {
+        if ( ! $this->hasher->isPasswordValid($user, $command->password)) {
             throw new BadCredentialsException();
         }
 
