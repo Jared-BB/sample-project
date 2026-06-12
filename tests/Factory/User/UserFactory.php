@@ -7,6 +7,7 @@ namespace App\Tests\Factory\User;
 use App\User\Domain\User;
 use App\User\Domain\ValueObject\Email;
 use App\User\Domain\ValueObject\Role;
+use ReflectionProperty;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
@@ -49,7 +50,7 @@ final class UserFactory extends PersistentObjectFactory
                 ->getPasswordHasher($user)
                 ->hash((string) $a['password']);
 
-            $reflection = new \ReflectionProperty(User::class, 'password');
+            $reflection = new ReflectionProperty(User::class, 'password');
             $reflection->setValue($user, $hashedPassword);
 
             return $user;
