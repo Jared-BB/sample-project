@@ -46,16 +46,6 @@ jobs:
                   extensions: mbstring, intl, pdo_pgsql
                   coverage: xdebug
 
-            - name: Setup SSH for private dependencies
-              uses: webfactory/ssh-agent@v0.9.0
-              with:
-                  ssh-private-key: ${{ secrets.DEPENDENCIES_DEPLOY_KEY }}
-
-            - name: Trust github.com host key
-              run: |
-                  mkdir -p ~/.ssh
-                  ssh-keyscan github.com >> ~/.ssh/known_hosts
-
             - name: Cache Composer dependencies
               uses: actions/cache@v4
               with:

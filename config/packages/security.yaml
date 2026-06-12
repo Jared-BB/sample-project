@@ -14,6 +14,7 @@ security:
             stateless: true
             provider: app_user_provider
             jwt: ~
+            user_checker: App\User\Application\Service\AuthenticatedUserChecker
 
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }

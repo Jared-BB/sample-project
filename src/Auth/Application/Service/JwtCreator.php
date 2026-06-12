@@ -7,7 +7,7 @@ namespace App\Auth\Application\Service;
 use App\User\Domain\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
-final readonly class JwtService
+final readonly class JwtCreator
 {
     public function __construct(
         private JWTTokenManagerInterface $jwt,
