@@ -7,7 +7,6 @@ namespace App\User\Application\Command;
 use App\User\Domain\Exception\UserAlreadyExistsException;
 use App\User\Domain\User;
 use App\User\Domain\UserRepository;
-use App\User\Domain\ValueObject\Password;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Uid\Uuid;
@@ -34,12 +33,8 @@ final readonly class CreateCommandHandler
         );
 
         $user->addPassword(
-            password: new Password(
-                $this->hasher->hashPassword(
-                    user: $user,
-                    plainPassword: bin2hex(random_bytes(8)),
-                ),
-            ),
+            hasher: $this->hasher,
+            password: $command->password,
         );
 
         $this->userRepository->save($user);

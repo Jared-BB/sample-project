@@ -15,6 +15,7 @@ use App\User\Infrastructure\Persistence\PostgresqlUserRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
@@ -30,8 +31,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'email', type: Types::STRING, length: 254, nullable: false)]
     private string $email;
 
-    #[ORM\Embedded(class: Password::class, columnPrefix: false)]
-    private Password $password;
+    #[ORM\Column(name: 'password', type: Types::STRING, length: 254, nullable: false)]
+    private string $password;
 
     #[ORM\Column(name: 'role', type: Types::STRING, length: 50, nullable: false, enumType: Role::class)]
     private Role $role;
@@ -91,14 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function password(): Password
-    {
-        return $this->password;
-    }
-
     public function getPassword(): ?string
     {
-        return $this->password->asString();
+        return $this->password;
     }
 
     public function role(): Role
@@ -121,9 +117,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
-    public function addPassword(Password $password): void
+    public function addPassword(UserPasswordHasherInterface $hasher, Password $password): void
     {
-        $this->password = $password;
+        $this->password = $hasher->hashPassword(
+            user: $this,
+            plainPassword: $password->asString(),
+        );
     }
 
     public function delete(): void

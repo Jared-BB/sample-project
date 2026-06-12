@@ -33,6 +33,7 @@ class CreateTest extends FunctionalTestCase
             'headers' => self::basicHeaders(),
             'json' => [
                 'email' => 'jared@test.com',
+                'password' => 'PasswordOk1',
                 'role' => Role::AGENT->value,
             ],
         ]);
@@ -50,6 +51,7 @@ class CreateTest extends FunctionalTestCase
             'headers' => self::basicHeaders(),
             'json' => [
                 'email' => 'jared@test.com',
+                'password' => 'PasswordOk1',
             ],
         ]);
 
@@ -67,6 +69,7 @@ class CreateTest extends FunctionalTestCase
             'headers' => self::basicHeaders(),
             'json' => [
                 'email' => 'mail',
+                'password' => 'PasswordOk1',
                 'role' => Role::AGENT->value,
             ],
         ]);
@@ -79,12 +82,32 @@ class CreateTest extends FunctionalTestCase
         self::assertSame('email: This value is not a valid email address.', $json['message']);
     }
 
+    public function test_create_user_bad_request_with_invalid_password(): void
+    {
+        $response = $this->client->request('POST', self::ENDPOINT, [
+            'headers' => self::basicHeaders(),
+            'json' => [
+                'email' => 'jared@test.com',
+                'password' => 'a',
+                'role' => Role::AGENT->value,
+            ],
+        ]);
+
+        self::assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+
+        $json = $response->toArray(false);
+
+        self::assertSame('BAD_REQUEST', $json['error']);
+        self::assertSame('Expected a value to contain between 8 and 128 characters. Got: "a"', $json['message']);
+    }
+
     public function test_create_user_bad_request_with_invalid_role(): void
     {
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
             'json' => [
                 'email' => 'jared@test.com',
+                'password' => 'PasswordOk1',
                 'role' => 'wrong_role',
             ],
         ]);
@@ -108,6 +131,7 @@ class CreateTest extends FunctionalTestCase
             'headers' => self::basicHeaders(),
             'json' => [
                 'email' => $user->email()->asString(),
+                'password' => 'PasswordOk1',
                 'role' => Role::AGENT->value,
             ],
         ]);

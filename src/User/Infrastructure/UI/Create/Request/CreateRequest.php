@@ -14,6 +14,9 @@ final class CreateRequest
     public string $email;
 
     #[Assert\NotBlank]
+    public string $password;
+
+    #[Assert\NotBlank]
     #[Assert\Choice(callback: [Role::class, 'values'])]
     public string $role;
 }

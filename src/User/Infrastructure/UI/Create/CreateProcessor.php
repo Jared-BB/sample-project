@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\User\Application\Command\CreateCommand;
 use App\User\Domain\ValueObject\Email;
+use App\User\Domain\ValueObject\Password;
 use App\User\Domain\ValueObject\Role;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
@@ -29,6 +30,7 @@ final class CreateProcessor implements ProcessorInterface
             $this->commandBus->dispatch(
                 new CreateCommand(
                     email: new Email($data->email),
+                    password: new Password($data->password),
                     role: Role::from($data->role),
                 )
             );

@@ -13,14 +13,6 @@ git clone https://github.com/Jared-BB/sample-project
 make start
 ```
 ---
-Check the doc in a browser:
-```
-http://localhost:8000/api/docs
-```
-RabbitMQ queues can be checked in:
-```
-http://localhost:15672/#/
-```
 Run the tests!
 ```
 php bin/phpunit
@@ -36,4 +28,18 @@ php -d memory_limit=1G vendor/bin/phpstan analyze src tests --memory-limit=1G
 Check the code style with cs-fixer
 ```
 vendor/bin/php-cs-fixer fix --dry-run --diff
+```
+Check the API Doc in a browser:
+```
+http://localhost:8000/api/docs
+```
+RabbitMQ queues can be checked in:
+```
+http://localhost:15672/#/
+```
+To connect postgres database:
+```
+docker exec -it sample-postgres bash
+psql -U sample -d sample -W
+\dt
 ```
