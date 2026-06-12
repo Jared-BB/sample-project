@@ -18,8 +18,8 @@ final readonly class FindAllActiveQueryHandler
     public function __invoke(FindAllActiveQuery $query): array
     {
         return [
-            $this->userRepository->findActive($query->page),
-            $this->userRepository->countActive(),
+            $this->userRepository->findActive($query->search, $query->page),
+            $this->userRepository->countActive($query->search),
         ];
     }
 }

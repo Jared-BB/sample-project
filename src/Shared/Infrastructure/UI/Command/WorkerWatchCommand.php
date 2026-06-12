@@ -68,6 +68,7 @@ class WorkerWatchCommand extends Command
         if ($check->isSuccessful()) {
             if ( ! $restart) {
                 $output->writeln(sprintf('Worker "%s" already enabled.', $transport));
+
                 return;
             }
 

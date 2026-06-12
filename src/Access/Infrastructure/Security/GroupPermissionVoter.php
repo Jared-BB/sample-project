@@ -62,15 +62,17 @@ final class GroupPermissionVoter extends Voter
             throw MissingContextException::create();
         }
 
-        $userGroup = $this->groupRepository->findOneByUserOrFail($user->id());
+        $userGroups = $this->groupRepository->findByUser($user->id());
 
-        foreach ($userGroup->permissionsByContext($context) as $permissionData) {
-            foreach ($requiredPermissions as $requiredPermission) {
-                if (
-                    $permissionData->permission()->value === $requiredPermission->permission->value
-                    && $permissionData->objectId()?->toString() === $requiredPermission->objectId?->toString()
-                ) {
-                    return true;
+        foreach ($userGroups as $userGroup) {
+            foreach ($userGroup->permissionsByContext($context) as $permissionData) {
+                foreach ($requiredPermissions as $requiredPermission) {
+                    if (
+                        $permissionData->permission()->value === $requiredPermission->permission->value
+                        && $permissionData->objectId()?->toString() === $requiredPermission->objectId?->toString()
+                    ) {
+                        return true;
+                    }
                 }
             }
         }

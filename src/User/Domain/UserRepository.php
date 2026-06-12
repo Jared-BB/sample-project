@@ -18,9 +18,9 @@ interface UserRepository
     /**
      * @return User[]
      */
-    public function findActive(int $page): array;
+    public function findActive(?string $search, int $page): array;
 
-    public function countActive(): int;
+    public function countActive(?string $search): int;
 
     public function save(User $user): void;
 }

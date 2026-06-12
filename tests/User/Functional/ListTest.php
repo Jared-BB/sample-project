@@ -6,7 +6,7 @@ namespace App\Tests\User\Functional;
 
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Tests\FunctionalTestCase;
-use App\Tests\Story\User\UserStory;
+use App\Tests\Story\User\ListUsersStory;
 use App\User\Domain\User;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,30 +27,79 @@ class ListTest extends FunctionalTestCase
 
     public function test_list_users_ok(): void
     {
-        UserStory::load();
+        ListUsersStory::load();
 
         /** @var User $user */
-        $user = UserStory::get('user');
+        $user = ListUsersStory::get('agent_user_1');
 
         $response = $this->client->request('GET', self::ENDPOINT, [
             'headers' => self::headersWithJWTForUser($user),
+            'query' => [
+                'page' => 1,
+            ],
         ]);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
 
         $json = $response->toArray();
 
-        self::assertSame(2, $json['totalItems']);
-        self::assertSame('test_admin@attendo.com', $json['member'][0]['email']);
-        self::assertSame('test_agent@attendo.com', $json['member'][1]['email']);
+        self::assertCount(3, $json);
+        self::assertSame('admin@test.com', $json[0]['email']);
+        self::assertSame('agent_1@test.com', $json[1]['email']);
+        self::assertSame('agent_2@test.com', $json[2]['email']);
+    }
+
+    public function test_list_users_filtered_ok(): void
+    {
+        ListUsersStory::load();
+
+        /** @var User $user */
+        $user = ListUsersStory::get('agent_user_1');
+
+        $response = $this->client->request('GET', self::ENDPOINT, [
+            'headers' => self::headersWithJWTForUser($user),
+            'query' => [
+                'page' => 1,
+                'search' => 'agent',
+            ],
+        ]);
+
+        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
+
+        $json = $response->toArray();
+
+        self::assertCount(2, $json);
+        self::assertSame('agent_1@test.com', $json[0]['email']);
+        self::assertSame('agent_2@test.com', $json[1]['email']);
+    }
+
+    public function test_list_users_ok_but_invalid_page(): void
+    {
+        ListUsersStory::load();
+
+        /** @var User $user */
+        $user = ListUsersStory::get('agent_user_1');
+
+        $response = $this->client->request('GET', self::ENDPOINT, [
+            'headers' => self::headersWithJWTForUser($user),
+            'query' => [
+                'page' => 2,
+            ],
+        ]);
+
+        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
+
+        $json = $response->toArray();
+
+        self::assertCount(0, $json);
     }
 
     public function test_list_users_with_no_permissions(): void
     {
-        UserStory::load();
+        ListUsersStory::load();
 
         /** @var User $user */
-        $user = UserStory::get('user');
+        $user = ListUsersStory::get('agent_user_2');
 
         $response = $this->client->request('GET', self::ENDPOINT, [
             'headers' => self::headersWithJWTForUser($user),

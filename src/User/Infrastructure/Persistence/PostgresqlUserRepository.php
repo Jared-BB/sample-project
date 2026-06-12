@@ -45,22 +45,39 @@ class PostgresqlUserRepository extends ServiceEntityRepository implements UserRe
         return $user;
     }
 
-    public function findActive(int $page): array
+    public function findActive(?string $search, int $page): array
     {
         $page = max(1, $page);
         $offset = ($page - 1) * Pagination::LIMIT;
 
-        return $this->findBy(
-            criteria: ['enabled' => true],
-            orderBy: ['createdAt' => 'ASC'],
-            limit: Pagination::LIMIT,
-            offset: $offset,
-        );
+        $qb = $this->createQueryBuilder('u')
+            ->andWhere('u.enabled = true')
+            ->orderBy('u.createdAt', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults(Pagination::LIMIT);
+
+        if ($search) {
+            $qb
+                ->andWhere('LOWER(u.email) LIKE LOWER(:search)')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
-    public function countActive(): int
+    public function countActive(?string $search): int
     {
-        return $this->count(['enabled' => true]);
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->andWhere('u.enabled = true');
+
+        if ($search) {
+            $qb
+                ->andWhere('LOWER(u.email) LIKE LOWER(:search)')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     public function save(User $user): void

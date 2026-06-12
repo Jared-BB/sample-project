@@ -55,8 +55,8 @@ class FunctionalTestCase extends KernelTestCase
     protected static function basicHeaders(): array
     {
         return [
-            'Content-Type' => 'application/ld+json',
-            'Accept' => 'application/ld+json',
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
         ];
     }
 
@@ -70,8 +70,8 @@ class FunctionalTestCase extends KernelTestCase
         $jwt = $jwtManager->createFromPayload($user);
 
         return [
-            'Content-Type' => 'application/ld+json',
-            'Accept' => 'application/ld+json',
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $jwt,
         ];
     }

@@ -24,7 +24,7 @@ final class UserFactory extends PersistentObjectFactory
         return [
             'email' => self::faker()->email(),
             'password' => self::faker()->password(),
-            'role' => Role::ADMIN->value,
+            'role' => Role::AGENT->value,
             'enabled' => true,
         ];
     }

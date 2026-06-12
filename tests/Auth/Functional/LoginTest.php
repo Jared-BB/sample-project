@@ -6,7 +6,6 @@ namespace App\Tests\Auth\Functional;
 
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Tests\FunctionalTestCase;
-use App\Tests\Story\Access\Group\GroupWithUserStory;
 use App\Tests\Story\User\UserStory;
 use App\User\Domain\User;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,10 +27,10 @@ class LoginTest extends FunctionalTestCase
 
     public function test_login_ok(): void
     {
-        GroupWithUserStory::load();
+        UserStory::load();
 
         /** @var User $user */
-        $user = GroupWithUserStory::get('user');
+        $user = UserStory::get('user');
 
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
@@ -52,7 +51,7 @@ class LoginTest extends FunctionalTestCase
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
             'json' => [
-                'email' => 'jared@attendo.com',
+                'email' => 'jared@test.com',
             ],
         ]);
 
@@ -69,7 +68,7 @@ class LoginTest extends FunctionalTestCase
         $response = $this->client->request('POST', self::ENDPOINT, [
             'headers' => self::basicHeaders(),
             'json' => [
-                'email' => 'user_not_found@attendo.com',
+                'email' => 'user_not_found@test.com',
                 'password' => 'Asdf1234',
             ],
         ]);
@@ -79,7 +78,7 @@ class LoginTest extends FunctionalTestCase
         $json = $response->toArray(false);
 
         self::assertSame('USER_NOT_FOUND', $json['error']);
-        self::assertSame('User user_not_found@attendo.com not found', $json['message']);
+        self::assertSame('User user_not_found@test.com not found', $json['message']);
     }
 
     public function test_login_password_ko(): void

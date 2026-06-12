@@ -7,6 +7,7 @@ namespace App\Tests\User\Functional;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Shared\Domain\EventStore;
 use App\Tests\FunctionalTestCase;
+use App\Tests\Story\User\AdminUserStory;
 use App\Tests\Story\User\UserStory;
 use App\Tests\Story\User\UserWithUserPermissions;
 use App\User\Domain\Event\UserDeletedEvent;
@@ -51,6 +52,33 @@ class DeleteTest extends FunctionalTestCase
         self::assertInstanceOf(UserDeletedEvent::class, $events[0]);
 
         $userData = self::selectFrom('"user" WHERE id = \'' . $user->id() . '\'')[0];
+        self::assertTrue($userData['deleted']);
+    }
+
+    public function test_delete_user_ok_as_admin(): void
+    {
+        AdminUserStory::load();
+
+        /** @var User $adminUser */
+        $adminUser = AdminUserStory::get('admin_user');
+        /** @var User $userToDelete */
+        $userToDelete = AdminUserStory::get('agent_user');
+
+        EventStore::clear();
+
+        $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $userToDelete->id()]);
+
+        $response = $this->client->request('DELETE', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($adminUser),
+        ]);
+
+        self::assertSame(Response::HTTP_ACCEPTED, $response->getStatusCode());
+
+        $events = self::getEvents();
+        self::assertCount(1, $events);
+        self::assertInstanceOf(UserDeletedEvent::class, $events[0]);
+
+        $userData = self::selectFrom('"user" WHERE id = \'' . $userToDelete->id() . '\'')[0];
         self::assertTrue($userData['deleted']);
     }
 
