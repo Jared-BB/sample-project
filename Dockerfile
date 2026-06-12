@@ -13,15 +13,11 @@ RUN set -eux; \
         librabbitmq-dev librabbitmq4 \
         libssl-dev libcurl4-openssl-dev \
         $PHPIZE_DEPS; \
-    \
     docker-php-ext-configure intl; \
     docker-php-ext-install -j"$(nproc)" intl zip bcmath pcntl opcache pdo_pgsql mbstring curl; \
-    \
     pecl install amqp redis apcu xdebug; \
     docker-php-ext-enable amqp redis apcu xdebug; \
-    \
     apt-mark manual librabbitmq4 libpq5; \
-    \
     apt-get purge -y --auto-remove \
         libssl-dev libcurl4-openssl-dev \
         $PHPIZE_DEPS; \
@@ -42,10 +38,15 @@ RUN set -eux; \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN a2enmod rewrite
-ENV APACHE_DOCUMENT_ROOT=/var/www/sample/public
-RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf /etc/apache2/apache2.conf
+
+RUN sed -ri 's!/var/www/html!/var/www/sample/public!g' \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf
 
 WORKDIR /var/www/sample
+
+RUN mkdir -p var/cache var/log && \
+    chown -R www-data:www-data var
 
 RUN { \
     echo 'opcache.enable=1'; \
@@ -60,4 +61,5 @@ RUN { \
   } > /usr/local/etc/php/conf.d/opcache.ini
 
 EXPOSE 80
+
 CMD ["apache2-foreground"]
