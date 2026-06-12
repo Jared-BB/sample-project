@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Access\Domain;
 
+use App\Access\Application\DTO\GroupPermissionCollection;
 use Symfony\Component\Uid\Uuid;
 
 interface GroupRepository
 {
-    /**
-     * @return Group[]
-     */
-    public function findByUser(Uuid $userId): array;
+    public function userHasAnyPermission(
+        Uuid $userId,
+        GroupPermissionCollection $permissionCollection,
+    ): bool;
 }

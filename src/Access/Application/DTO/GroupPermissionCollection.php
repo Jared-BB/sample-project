@@ -2,17 +2,22 @@
 
 namespace App\Access\Application\DTO;
 
+use App\Access\Domain\Exception\InvalidContextException;
 use App\Access\Domain\GroupPermission\ValueObject\Context;
-use App\Access\Domain\GroupPermission\ValueObject\Permission;
-use Symfony\Component\Uid\Uuid;
 
 final class GroupPermissionCollection
 {
     private array $items = [];
+    private ?Context $context = null;
 
     public function add(GroupPermissionDto $dto): void
     {
+        if ($this->context && $this->context !== $dto->context) {
+            throw InvalidContextException::create();
+        }
+
         $this->items[] = $dto;
+        $this->context = $dto->context;
     }
 
     /** @return GroupPermissionDto[] */
@@ -21,20 +26,12 @@ final class GroupPermissionCollection
         return $this->items;
     }
 
-    public static function fromRequest(array $permissions): self
+    public function context(): Context
     {
-        $collection = new self();
-
-        foreach ($permissions as $data) {
-            $collection->add(
-                new GroupPermissionDto(
-                    context: Context::from($data['context']),
-                    permission: Permission::from($data['permission']),
-                    objectId: ! empty($data['objectId']) ? Uuid::fromString($data['objectId']) : null,
-                )
-            );
+        if ( ! $this->context) {
+            throw InvalidContextException::create();
         }
 
-        return $collection;
+        return $this->context;
     }
 }
