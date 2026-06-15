@@ -35,8 +35,8 @@ class ListTest extends FunctionalTestCase
 
         self::getContainer()
             ->get(UpdateGroupProjectionCommandHandler::class)(
-            new UpdateGroupProjectionCommand($user->id())
-        );
+                new UpdateGroupProjectionCommand($user->id())
+            );
 
         $response = $this->client->request('GET', self::ENDPOINT, [
             'headers' => self::headersWithJWTForUser($user),
