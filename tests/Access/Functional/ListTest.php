@@ -6,6 +6,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Access\Application\Command\UpdateGroupProjectionCommand;
 use App\Access\Application\Command\UpdateGroupProjectionCommandHandler;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
+use App\Access\Infrastructure\Persistence\RedisGroupRepository;
 use App\Tests\FunctionalTestCase;
 use App\Tests\Story\User\UserWithUserPermissions;
 use App\User\Domain\User;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ListTest extends FunctionalTestCase
 {
     private Client $client;
+    private ?User $user = null;
 
     private const string ENDPOINT = '/api/v1/groups';
 
@@ -26,20 +28,30 @@ class ListTest extends FunctionalTestCase
         $this->client = $container->get('test.api_platform.client');
     }
 
+    protected function tearDown(): void
+    {
+        if ( ! $this->user) {
+            self::getContainer()
+                ->get(RedisGroupRepository::class)
+                ->deleteForUser($this->user->id());
+        }
+
+        parent::tearDown();
+    }
+
     public function test_list_groups_ok(): void
     {
         UserWithUserPermissions::load();
 
-        /** @var User $user */
-        $user = UserWithUserPermissions::get('user');
+        $this->user = UserWithUserPermissions::get('user');
 
         self::getContainer()
             ->get(UpdateGroupProjectionCommandHandler::class)(
-                new UpdateGroupProjectionCommand($user->id())
+                new UpdateGroupProjectionCommand($this->user->id())
             );
 
         $response = $this->client->request('GET', self::ENDPOINT, [
-            'headers' => self::headersWithJWTForUser($user),
+            'headers' => self::headersWithJWTForUser($this->user),
             'query' => [
                 'page' => 1,
             ],

@@ -43,3 +43,9 @@ docker exec -it sample-postgres bash
 psql -U sample -d sample -W
 \dt
 ```
+Check Redis:
+```
+docker exec -it sample-redis redis-cli
+KEYS *
+GET GROUP:USER:019ecb04-c6a2-7df3-b5e2-1dfda88daf4d
+```

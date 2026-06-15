@@ -12,4 +12,6 @@ interface GroupReadRepository
      * @param Group[] $groups
      */
     public function saveForUser(Uuid $userId, array $groups): void;
+
+    public function deleteForUser(Uuid $userId): void;
 }

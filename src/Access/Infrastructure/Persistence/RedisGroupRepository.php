@@ -48,6 +48,11 @@ final readonly class RedisGroupRepository implements GroupReadRepository
         );
     }
 
+    public function deleteForUser(Uuid $userId): void
+    {
+        $this->redis->del([$this->key($userId)]);
+    }
+
     private function key(Uuid $userId): string
     {
         return self::KEY . $userId->toString();
