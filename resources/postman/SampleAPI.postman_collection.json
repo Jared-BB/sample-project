@@ -177,6 +177,43 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "ACCESS",
+      "item": [
+        {
+          "name": "GET GROUPS",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/ld+json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer token",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/v1/groups",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
