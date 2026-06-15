@@ -71,6 +71,17 @@ class PostgresqlGroupRepository extends ServiceEntityRepository implements Group
         return $qb->getQuery()->getOneOrNullResult() !== null;
     }
 
+    public function findByUserId(Uuid $userId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->innerJoin(GroupUser::class, 'gu', 'WITH', 'gu.group = g.id')
+            ->where('gu.userId = :userId')
+            ->andWhere('g.enabled = true')
+            ->setParameter('userId', $userId->toString())
+            ->getQuery()
+            ->getResult();
+    }
+
     public function save(Group $group): void
     {
         $this->getEntityManager()->persist($group);

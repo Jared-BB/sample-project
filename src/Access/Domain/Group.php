@@ -88,9 +88,20 @@ class Group
         return $this->createdAt;
     }
 
+    /**
+     * @return GroupUser[]
+     */
     public function users(): array
     {
         return $this->users->toArray();
+    }
+
+    /**
+     * @return GroupPermission[]
+     */
+    public function permissions(): array
+    {
+        return $this->permissions->toArray();
     }
 
     public function addUser(Uuid $userId): void

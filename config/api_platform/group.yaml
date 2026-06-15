@@ -1,0 +1,12 @@
+App\Access\Domain\Group:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
+            uriTemplate: /v1/groups
+            status: 200
+            input: false
+            output: App\Access\Infrastructure\UI\List\Response\GroupItemResponse
+            provider: App\Access\Infrastructure\UI\List\ListProvider
+            read: true
+            deserialize: false
+            validate: false
+            paginationEnabled: true

@@ -14,5 +14,10 @@ interface GroupRepository
         GroupPermissionCollection $permissionCollection,
     ): bool;
 
+    /**
+     * @return Group[]
+     */
+    public function findByUserId(Uuid $userId): array;
+
     public function save(Group $group): void;
 }
