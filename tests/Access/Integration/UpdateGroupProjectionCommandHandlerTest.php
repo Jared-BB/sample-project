@@ -11,15 +11,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class UpdateGroupProjectionCommandHandlerTest extends IntegrationTestCase
 {
-    private ?User $user = null;
+    private User $user;
 
     protected function tearDown(): void
     {
-        if ( ! $this->user) {
-            self::getContainer()
-                ->get(RedisGroupRepository::class)
-                ->deleteForUser($this->user->id());
-        }
+        self::getContainer()
+            ->get(RedisGroupRepository::class)
+            ->deleteForUser($this->user->id());
 
         parent::tearDown();
     }

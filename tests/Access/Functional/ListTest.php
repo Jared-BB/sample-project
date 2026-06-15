@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ListTest extends FunctionalTestCase
 {
     private Client $client;
-    private ?User $user = null;
+    private User $user;
 
     private const string ENDPOINT = '/api/v1/groups';
 
@@ -30,11 +30,9 @@ class ListTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        if ( ! $this->user) {
-            self::getContainer()
-                ->get(RedisGroupRepository::class)
-                ->deleteForUser($this->user->id());
-        }
+        self::getContainer()
+            ->get(RedisGroupRepository::class)
+            ->deleteForUser($this->user->id());
 
         parent::tearDown();
     }
