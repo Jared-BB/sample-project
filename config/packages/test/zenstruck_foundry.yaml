@@ -1,0 +1,13 @@
+when@dev: &dev
+    zenstruck_foundry:
+        persistence:
+            flush_once: true
+        orm:
+            reset:
+                connections:
+                    - core
+                entity_managers:
+                    - core
+                mode: schema
+
+when@test: *dev
