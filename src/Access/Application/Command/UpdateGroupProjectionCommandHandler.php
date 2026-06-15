@@ -4,7 +4,9 @@ namespace App\Access\Application\Command;
 
 use App\Access\Domain\GroupReadRepository;
 use App\Access\Domain\GroupRepository;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler(bus: 'commands.bus')]
 final readonly class UpdateGroupProjectionCommandHandler
 {
     public function __construct(
