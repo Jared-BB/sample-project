@@ -5,15 +5,15 @@ namespace App\Access\Infrastructure\Persistence;
 use App\Access\Domain\Group;
 use App\Access\Domain\GroupPermission\GroupPermission;
 use App\Access\Domain\GroupReadRepository;
+use Predis\ClientInterface;
 use Symfony\Component\Uid\Uuid;
-use Redis;
 
 final readonly class RedisGroupRepository implements GroupReadRepository
 {
     private const string KEY = 'GROUP:USER:';
 
     public function __construct(
-        private Redis $redis,
+        private ClientInterface $redis,
     ) {
     }
 
@@ -21,11 +21,11 @@ final readonly class RedisGroupRepository implements GroupReadRepository
     {
         $data = $this->redis->get($this->key($userId));
 
-        if ($data === false) {
+        if ( ! $data) {
             return [];
         }
 
-        return json_decode($data, true, JSON_THROW_ON_ERROR);
+        return json_decode($data, true);
     }
 
     public function saveForUser(Uuid $userId, array $groups): void

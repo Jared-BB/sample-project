@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Application\Service;
 
-use App\User\Domain\LoggedUserProviderInterface;
+use App\Shared\Domain\LoggedUserProviderInterface;
 use App\User\Domain\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;

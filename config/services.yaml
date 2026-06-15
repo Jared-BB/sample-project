@@ -21,3 +21,8 @@ services:
 
     App\User\Application\Port\AccessProvisioner:
         alias: App\Shared\Infrastructure\Bridge\UserAccess\MessengerAccessProvisioner
+
+    Predis\ClientInterface:
+        class: Predis\Client
+        arguments:
+            - '%env(REDIS_URL)%'
