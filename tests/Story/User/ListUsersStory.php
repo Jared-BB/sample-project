@@ -11,15 +11,16 @@ use App\Tests\Factory\Access\Group\GroupUser\GroupUserFactory;
 use App\Tests\Factory\User\UserFactory;
 use App\User\Domain\ValueObject\Role;
 use Zenstruck\Foundry\Story;
+use DateTimeImmutable;
 
 class ListUsersStory extends Story
 {
     public function build(): void
     {
-        $user1 = UserFactory::createOne(['email' => 'admin@test.com', 'password' => 'PasswordOk1', 'role' => Role::ADMIN->value]);
+        $user1 = UserFactory::createOne(['email' => 'admin@test.com', 'password' => 'PasswordOk1', 'role' => Role::ADMIN->value, 'createdAt' => new DateTimeImmutable('-4 hour')]);
         $this->addState('admin_user', $user1);
 
-        $user2 = UserFactory::createOne(['email' => 'agent_1@test.com', 'password' => 'PasswordOk1', 'role' => Role::AGENT->value]);
+        $user2 = UserFactory::createOne(['email' => 'agent_1@test.com', 'password' => 'PasswordOk1', 'role' => Role::AGENT->value, 'createdAt' => new DateTimeImmutable('-3 hour')]);
         $this->addState('agent_user_1', $user2);
 
         $permissionCollection = new GroupPermissionCollection();
@@ -36,10 +37,10 @@ class ListUsersStory extends Story
         ]);
         $this->addState('groupUser', $groupUser);
 
-        $user3 = UserFactory::createOne(['email' => 'agent_2@test.com', 'password' => 'PasswordOk1', 'role' => Role::AGENT->value]);
+        $user3 = UserFactory::createOne(['email' => 'agent_2@test.com', 'password' => 'PasswordOk1', 'role' => Role::AGENT->value, 'createdAt' => new DateTimeImmutable('-2 hour')]);
         $this->addState('agent_user_2', $user3);
 
-        $user4 = UserFactory::createOne(['email' => 'agent_3@test.com', 'password' => 'PasswordOk1', 'role' => Role::AGENT->value, 'enabled' => false]);
+        $user4 = UserFactory::createOne(['email' => 'agent_3@test.com', 'password' => 'PasswordOk1', 'role' => Role::AGENT->value, 'enabled' => false, 'createdAt' => new DateTimeImmutable('-1 hour')]);
         $this->addState('agent_user_3', $user4);
     }
 }

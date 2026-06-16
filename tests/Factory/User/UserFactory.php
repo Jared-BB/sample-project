@@ -11,6 +11,7 @@ use ReflectionProperty;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+use DateTimeImmutable;
 
 final class UserFactory extends PersistentObjectFactory
 {
@@ -26,6 +27,7 @@ final class UserFactory extends PersistentObjectFactory
             'password' => self::faker()->password(),
             'role' => Role::AGENT->value,
             'enabled' => true,
+            'createdAt' => new DateTimeImmutable(),
         ];
     }
 
@@ -52,6 +54,9 @@ final class UserFactory extends PersistentObjectFactory
 
             $reflection = new ReflectionProperty(User::class, 'password');
             $reflection->setValue($user, $hashedPassword);
+
+            $reflection = new ReflectionProperty(User::class, 'createdAt');
+            $reflection->setValue($user, $a['createdAt']);
 
             return $user;
         });
