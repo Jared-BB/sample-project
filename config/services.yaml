@@ -26,3 +26,7 @@ services:
         class: Predis\Client
         arguments:
             - '%env(REDIS_URL)%'
+
+    App\Shared\Infrastructure\Persistence\ElasticSearch\Command\CreateElasticsearchIndicesCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'

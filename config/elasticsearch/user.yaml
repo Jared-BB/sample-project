@@ -1,0 +1,36 @@
+index: users_v1
+alias: users
+
+settings:
+    analysis:
+        analyzer:
+            email_analyzer:
+                type: custom
+                tokenizer: uax_url_email
+                filter:
+                    - lowercase
+                    - asciifolding
+
+mappings:
+    properties:
+        id:
+            type: keyword
+
+        email:
+            type: text
+            analyzer: email_analyzer
+            fields:
+                keyword:
+                    type: keyword
+
+        role:
+            type: keyword
+
+        enabled:
+            type: boolean
+
+        deleted:
+            type: boolean
+
+        created_at:
+            type: date

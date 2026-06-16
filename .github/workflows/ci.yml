@@ -38,11 +38,25 @@ jobs:
                     --health-retries=5
                 ports:
                     - 6379:6379
+            elasticsearch:
+                image: docker.elastic.co/elasticsearch/elasticsearch:9.4.2
+                env:
+                    discovery.type: single-node
+                    xpack.security.enabled: 'false'
+                    ES_JAVA_OPTS: -Xms512m -Xmx512m
+                options: >-
+                    --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=10
+                ports:
+                    - 9200:9200
 
         env:
             APP_ENV: test
             DATABASE_URL: 'postgresql://sample:pSample1@127.0.0.1:5432/sample?serverVersion=16&charset=utf8'
             REDIS_URL: 'redis://127.0.0.1:6379'
+            ELASTICSEARCH_HOST: 'http://127.0.0.1:9200'
             JWT_PASSPHRASE: ''
 
         steps:
@@ -53,7 +67,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.4'
-                  extensions: mbstring, intl, pdo_pgsql, redis
+                  extensions: mbstring, intl, pdo_pgsql, redis, curl, amqp
                   coverage: xdebug
 
             - name: Cache Composer dependencies
@@ -75,6 +89,9 @@ jobs:
 
             - name: Map hostname "postgres" to localhost
               run: echo "127.0.0.1 postgres" | sudo tee -a /etc/hosts
+
+            - name: Create ElasticSearch indices
+              run: php bin/console app:elasticsearch:create-indices
 
             - name: Run PHPUnit with coverage
               shell: bash

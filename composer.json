@@ -15,6 +15,7 @@
         "api-platform/symfony": "^4.3.13",
         "doctrine/doctrine-migrations-bundle": ">=4",
         "doctrine/orm": "^3.6.5",
+        "elasticsearch/elasticsearch": "^9.4",
         "firebase/php-jwt": "^7.1.0",
         "lexik/jwt-authentication-bundle": ">=3.2",
         "predis/predis": "*",

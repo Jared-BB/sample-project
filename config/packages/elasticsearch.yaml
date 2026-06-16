@@ -1,0 +1,8 @@
+services:
+    Elastic\Elasticsearch\ClientBuilder:
+        factory: ['Elastic\Elasticsearch\ClientBuilder', 'create']
+        calls:
+            - [setHosts, [['%env(ELASTICSEARCH_HOST)%']]]
+
+    Elastic\Elasticsearch\Client:
+        factory: ['@Elastic\Elasticsearch\ClientBuilder', 'build']

@@ -16,7 +16,8 @@ start: ## Setup the project
 	echo "RabbitMQ started successfully!"
 	$(DOCKER_EXEC) -it sample-rabbitmq rabbitmqctl add_vhost sample && \
     $(DOCKER_EXEC) -it sample-rabbitmq rabbitmqctl set_permissions -p sample sample ".*" ".*" ".*" && \
-	$(SYMFONY_CONSOLE) messenger:setup-transports --no-interaction
+	$(SYMFONY_CONSOLE) messenger:setup-transports --no-interaction && \
+	$(SYMFONY_CONSOLE) app:elasticsearch:create-indices --no-interaction
 
 test-coverage:
 	docker exec -e XDEBUG_MODE=coverage sample-php php bin/phpunit tests/ --coverage-text

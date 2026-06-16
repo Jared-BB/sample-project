@@ -36,11 +36,14 @@ http://localhost:8000/api/docs
 RabbitMQ queues can be checked in:
 ```
 http://localhost:15672/#/
+user: sample
+password: pSample1
 ```
 To connect postgres database:
 ```
 docker exec -it sample-postgres bash
 psql -U sample -d sample -W
+password: pSample1
 \dt
 ```
 Check Redis:
