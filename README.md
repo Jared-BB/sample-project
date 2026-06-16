@@ -52,3 +52,9 @@ docker exec -it sample-redis redis-cli
 KEYS *
 GET GROUP:USER:019ecb04-c6a2-7df3-b5e2-1dfda88daf4d
 ```
+Check ElasticSearch:
+```
+docker exec -it sample-elasticsearch bash
+curl localhost:9200/_cat/indices?v
+curl -X GET "localhost:9200/users/_search?pretty"
+```
