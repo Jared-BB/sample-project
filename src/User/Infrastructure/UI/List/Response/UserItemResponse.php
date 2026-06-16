@@ -2,7 +2,7 @@
 
 namespace App\User\Infrastructure\UI\List\Response;
 
-use App\User\Domain\User;
+use App\User\Application\DTO\UserDto;
 
 final readonly class UserItemResponse
 {
@@ -10,10 +10,10 @@ final readonly class UserItemResponse
     public string $email;
     public string $role;
 
-    public function __construct(User $user)
+    public function __construct(UserDto $user)
     {
-        $this->id = $user->id()->toString();
-        $this->email = $user->email()->asString();
-        $this->role = $user->role()->value;
+        $this->id = $user->id;
+        $this->email = $user->email;
+        $this->role = $user->role;
     }
 }

@@ -15,12 +15,5 @@ interface UserRepository
 
     public function findByEmailOrFail(Email $email): User;
 
-    /**
-     * @return User[]
-     */
-    public function findActive(?string $search, int $page): array;
-
-    public function countActive(?string $search): int;
-
     public function save(User $user): void;
 }

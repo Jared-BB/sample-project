@@ -9,8 +9,9 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
 use App\Shared\Domain\Pagination;
+use App\User\Application\DTO\UserCollection;
+use App\User\Application\DTO\UserDto;
 use App\User\Application\Query\FindAllActiveQuery;
-use App\User\Domain\User;
 use App\User\Infrastructure\Security\AccessGuard;
 use App\User\Infrastructure\UI\List\Response\UserItemResponse;
 use ArrayIterator;
@@ -35,7 +36,8 @@ final class ListProvider implements ProviderInterface
         $page = isset($context['filters']['page']) ? (int) $context['filters']['page'] : 1;
         $search = $context['filters']['search'] ?? null;
 
-        [$items, $total] = $this->handle(
+        /** @var UserCollection $userCollection */
+        $userCollection = $this->handle(
             new FindAllActiveQuery(
                 search: $search,
                 page: $page,
@@ -43,17 +45,17 @@ final class ListProvider implements ProviderInterface
         );
 
         return new TraversablePaginator(
-            traversable: new ArrayIterator($this->transform($items)),
+            traversable: new ArrayIterator($this->transform($userCollection->items())),
             currentPage: $page,
             itemsPerPage: Pagination::LIMIT,
-            totalItems: $total
+            totalItems: $userCollection->total(),
         );
     }
 
     private function transform(array $users): array
     {
         $response = [];
-        /** @var User $user */
+        /** @var UserDto $user */
         foreach ($users as $user) {
             $response[] = new UserItemResponse($user);
         }

@@ -19,7 +19,7 @@ final readonly class ElasticSearchUserRepository implements UserReadRepository
     ) {
     }
 
-    public function searchUser(string $search, int $page): UserCollection
+    public function searchUsers(?string $search, int $page): UserCollection
     {
         $from = ($page - 1) * Pagination::LIMIT;
 
@@ -30,16 +30,6 @@ final readonly class ElasticSearchUserRepository implements UserReadRepository
             'track_total_hits' => true,
             'query' => [
                 'bool' => [
-                    'must' => [
-                        [
-                            'wildcard' => [
-                                'email.keyword' => [
-                                    'value' => '*' . strtolower($search) . '*',
-                                    'case_insensitive' => true,
-                                ],
-                            ],
-                        ],
-                    ],
                     'filter' => [
                         [
                             'term' => [
@@ -55,6 +45,19 @@ final readonly class ElasticSearchUserRepository implements UserReadRepository
                 ],
             ],
         ];
+
+        if ($search !== null && $search !== '') {
+            $body['query']['bool']['must'] = [
+                [
+                    'wildcard' => [
+                        'email.keyword' => [
+                            'value' => '*' . strtolower($search) . '*',
+                            'case_insensitive' => true,
+                        ],
+                    ],
+                ],
+            ];
+        }
 
         $response = $this->client->search([
             'index' => self::INDEX,

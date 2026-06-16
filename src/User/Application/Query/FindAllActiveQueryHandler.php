@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace App\User\Application\Query;
 
-use App\User\Domain\UserRepository;
+use App\User\Application\DTO\UserCollection;
+use App\User\Domain\UserReadRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(bus: 'query.bus')]
 final readonly class FindAllActiveQueryHandler
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private UserReadRepository $userRepository,
     ) {
     }
 
-    public function __invoke(FindAllActiveQuery $query): array
+    public function __invoke(FindAllActiveQuery $query): UserCollection
     {
-        return [
-            $this->userRepository->findActive($query->search, $query->page),
-            $this->userRepository->countActive($query->search),
-        ];
+        return $this->userRepository->searchUsers(
+            search: $query->search,
+            page: $query->page,
+        );
     }
 }

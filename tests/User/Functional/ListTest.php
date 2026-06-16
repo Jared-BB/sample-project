@@ -7,12 +7,16 @@ namespace App\Tests\User\Functional;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Tests\FunctionalTestCase;
 use App\Tests\Story\User\ListUsersStory;
+use App\User\Application\Command\UpdateUserProjectionCommand;
+use App\User\Application\Command\UpdateUserProjectionCommandHandler;
 use App\User\Domain\User;
+use App\User\Infrastructure\Persistence\ElasticSearchUserRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListTest extends FunctionalTestCase
 {
     private Client $client;
+    private array $users = [];
 
     private const string ENDPOINT = '/api/v1/users';
 
@@ -25,12 +29,27 @@ class ListTest extends FunctionalTestCase
         $this->client = $container->get('test.api_platform.client');
     }
 
+    protected function tearDown(): void
+    {
+        foreach ($this->users as $user) {
+            self::getContainer()
+                ->get(ElasticSearchUserRepository::class)
+                ->deleteUser($user);
+        }
+
+        $this->users = [];
+
+        parent::tearDown();
+    }
+
     public function test_list_users_ok(): void
     {
         ListUsersStory::load();
 
         /** @var User $user */
         $user = ListUsersStory::get('agent_user_1');
+
+        $this->prepareElasticSearchProjection();
 
         $response = $this->client->request('GET', self::ENDPOINT, [
             'headers' => self::headersWithJWTForUser($user),
@@ -56,6 +75,8 @@ class ListTest extends FunctionalTestCase
         /** @var User $user */
         $user = ListUsersStory::get('agent_user_1');
 
+        $this->prepareElasticSearchProjection();
+
         $response = $this->client->request('GET', self::ENDPOINT, [
             'headers' => self::headersWithJWTForUser($user),
             'query' => [
@@ -79,6 +100,8 @@ class ListTest extends FunctionalTestCase
 
         /** @var User $user */
         $user = ListUsersStory::get('agent_user_1');
+
+        $this->prepareElasticSearchProjection();
 
         $response = $this->client->request('GET', self::ENDPOINT, [
             'headers' => self::headersWithJWTForUser($user),
@@ -111,5 +134,20 @@ class ListTest extends FunctionalTestCase
 
         self::assertSame('ACCESS_DENIED', $json['error']);
         self::assertSame('Access denied', $json['message']);
+    }
+
+    private function prepareElasticSearchProjection(): void
+    {
+        $this->users[] = ListUsersStory::get('admin_user');
+        $this->users[] = ListUsersStory::get('agent_user_1');
+        $this->users[] = ListUsersStory::get('agent_user_2');
+        $this->users[] = ListUsersStory::get('agent_user_3');
+
+        foreach ($this->users as $user) {
+            self::getContainer()
+                ->get(UpdateUserProjectionCommandHandler::class)(
+                new UpdateUserProjectionCommand($user->id())
+            );
+        }
     }
 }

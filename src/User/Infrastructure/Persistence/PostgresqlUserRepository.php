@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Persistence;
 
-use App\Shared\Domain\Pagination;
 use App\User\Domain\Exception\UserNotFoundException;
 use App\User\Domain\User;
 use App\User\Domain\UserRepository;
@@ -43,41 +42,6 @@ class PostgresqlUserRepository extends ServiceEntityRepository implements UserRe
         }
 
         return $user;
-    }
-
-    public function findActive(?string $search, int $page): array
-    {
-        $page = max(1, $page);
-        $offset = ($page - 1) * Pagination::LIMIT;
-
-        $qb = $this->createQueryBuilder('u')
-            ->andWhere('u.enabled = true')
-            ->orderBy('u.createdAt', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults(Pagination::LIMIT);
-
-        if ($search) {
-            $qb
-                ->andWhere('LOWER(u.email) LIKE LOWER(:search)')
-                ->setParameter('search', '%' . $search . '%');
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    public function countActive(?string $search): int
-    {
-        $qb = $this->createQueryBuilder('u')
-            ->select('COUNT(u.id)')
-            ->andWhere('u.enabled = true');
-
-        if ($search) {
-            $qb
-                ->andWhere('LOWER(u.email) LIKE LOWER(:search)')
-                ->setParameter('search', '%' . $search . '%');
-        }
-
-        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     public function save(User $user): void
