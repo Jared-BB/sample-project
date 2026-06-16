@@ -10,8 +10,8 @@ use App\User\Domain\ValueObject\Role;
 use ReflectionProperty;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Uid\Uuid;
-use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use DateTimeImmutable;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 final class UserFactory extends PersistentObjectFactory
 {

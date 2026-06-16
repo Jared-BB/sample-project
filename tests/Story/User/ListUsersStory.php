@@ -10,8 +10,8 @@ use App\Tests\Factory\Access\Group\GroupFactory;
 use App\Tests\Factory\Access\Group\GroupUser\GroupUserFactory;
 use App\Tests\Factory\User\UserFactory;
 use App\User\Domain\ValueObject\Role;
-use Zenstruck\Foundry\Story;
 use DateTimeImmutable;
+use Zenstruck\Foundry\Story;
 
 class ListUsersStory extends Story
 {
