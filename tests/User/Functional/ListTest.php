@@ -63,9 +63,9 @@ class ListTest extends FunctionalTestCase
         $json = $response->toArray();
 
         self::assertCount(3, $json);
-        self::assertSame('admin@test.com', $json[0]['email']);
+        self::assertSame('agent_2@test.com', $json[0]['email']);
         self::assertSame('agent_1@test.com', $json[1]['email']);
-        self::assertSame('agent_2@test.com', $json[2]['email']);
+        self::assertSame('admin@test.com', $json[2]['email']);
     }
 
     public function test_list_users_filtered_ok(): void
@@ -90,8 +90,8 @@ class ListTest extends FunctionalTestCase
         $json = $response->toArray();
 
         self::assertCount(2, $json);
-        self::assertSame('agent_1@test.com', $json[0]['email']);
-        self::assertSame('agent_2@test.com', $json[1]['email']);
+        self::assertSame('agent_2@test.com', $json[0]['email']);
+        self::assertSame('agent_1@test.com', $json[1]['email']);
     }
 
     public function test_list_users_ok_but_invalid_page(): void

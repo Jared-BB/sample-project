@@ -28,6 +28,13 @@ final readonly class ElasticSearchUserRepository implements UserReadRepository
             'from' => $from,
             'size' => Pagination::LIMIT,
             'track_total_hits' => true,
+            'sort' => [
+                [
+                    'created_at' => [
+                        'order' => 'desc',
+                    ],
+                ],
+            ],
             'query' => [
                 'bool' => [
                     'filter' => [
