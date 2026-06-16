@@ -3,6 +3,7 @@
 namespace App\Shared\Infrastructure\Persistence\ElasticSearch\Command;
 
 use Elastic\Elasticsearch\Client;
+use stdClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -65,8 +66,8 @@ final class CreateElasticsearchIndicesCommand extends Command
             }
 
             $body = [
-                'settings' => $definition['settings'] ?? new \stdClass(),
-                'mappings' => $definition['mappings'] ?? new \stdClass(),
+                'settings' => $definition['settings'] ?? new stdClass(),
+                'mappings' => $definition['mappings'] ?? new stdClass(),
             ];
 
             $this->client->indices()->create([
