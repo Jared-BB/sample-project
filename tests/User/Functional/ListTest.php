@@ -146,8 +146,8 @@ class ListTest extends FunctionalTestCase
         foreach ($this->users as $user) {
             self::getContainer()
                 ->get(UpdateUserProjectionCommandHandler::class)(
-                new UpdateUserProjectionCommand($user->id())
-            );
+                    new UpdateUserProjectionCommand($user->id())
+                );
         }
     }
 }
