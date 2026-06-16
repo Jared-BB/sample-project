@@ -7,10 +7,10 @@ namespace App\Tests\Factory\User;
 use App\User\Domain\User;
 use App\User\Domain\ValueObject\Email;
 use App\User\Domain\ValueObject\Role;
+use DateTimeImmutable;
 use ReflectionProperty;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Uid\Uuid;
-use DateTimeImmutable;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 final class UserFactory extends PersistentObjectFactory
@@ -37,7 +37,7 @@ final class UserFactory extends PersistentObjectFactory
             $user = new User(
                 id: Uuid::v7(),
                 email: new Email((string) $a['email']),
-                role: Role::from($a['role']),
+                role: Role::from((string) $a['role']),
             );
 
             if ( ! $a['enabled']) {
