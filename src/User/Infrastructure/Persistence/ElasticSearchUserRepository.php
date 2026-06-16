@@ -2,6 +2,7 @@
 
 namespace App\User\Infrastructure\Persistence;
 
+use App\Shared\Domain\Pagination;
 use App\User\Application\DTO\UserCollection;
 use App\User\Application\DTO\UserDto;
 use App\User\Domain\User;
@@ -18,20 +19,46 @@ final readonly class ElasticSearchUserRepository implements UserReadRepository
     ) {
     }
 
-    public function searchUser(string $search): UserCollection
+    public function searchUser(string $search, int $page): UserCollection
     {
-        $response = $this->client->search([
-            'index' => self::INDEX,
-            'body' => [
-                'query' => [
-                    'wildcard' => [
-                        'email.keyword' => [
-                            'value' => '*' . strtolower($search) . '*',
-                            'case_insensitive' => true,
+        $from = ($page - 1) * Pagination::LIMIT;
+
+        /** @var array<string, mixed> $body */
+        $body = [
+            'from' => $from,
+            'size' => Pagination::LIMIT,
+            'track_total_hits' => true,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'wildcard' => [
+                                'email.keyword' => [
+                                    'value' => '*' . strtolower($search) . '*',
+                                    'case_insensitive' => true,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'term' => [
+                                'enabled' => true,
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'deleted' => false,
+                            ],
                         ],
                     ],
                 ],
             ],
+        ];
+
+        $response = $this->client->search([
+            'index' => self::INDEX,
+            'body' => $body,
         ]);
 
         return $this->transform($response->asArray());
@@ -66,9 +93,10 @@ final readonly class ElasticSearchUserRepository implements UserReadRepository
         ]);
     }
 
-    public function transform(array $response): UserCollection
+    private function transform(array $response): UserCollection
     {
         $users = new UserCollection();
+        $users->addTotal((int) ($response['hits']['total']['value'] ?? 0));
 
         foreach ($response['hits']['hits'] ?? [] as $hit) {
             $source = $hit['_source'] ?? [];

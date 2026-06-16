@@ -34,12 +34,20 @@ class UpdateUserProjectionCommandHandlerTest extends IntegrationTestCase
         /** @var ElasticSearchUserRepository $repo */
         $repo = self::getContainer()->get(ElasticSearchUserRepository::class);
 
-        $userCollection = $repo->searchUser($this->user->email()->asString());
+        $userCollection = $repo->searchUser(
+            search: $this->user->email()->asString(),
+            page: 1,
+        );
         self::assertCount(0, $userCollection->items());
+        self::assertSame(0, $userCollection->total());
 
         $bus->dispatch(new UpdateUserProjectionCommand($this->user->id()));
 
-        $userCollection = $repo->searchUser($this->user->email()->asString());
+        $userCollection = $repo->searchUser(
+            search: $this->user->email()->asString(),
+            page: 1,
+        );
         self::assertCount(1, $userCollection->items());
+        self::assertSame(1, $userCollection->total());
     }
 }
