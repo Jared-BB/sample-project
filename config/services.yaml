@@ -30,3 +30,7 @@ services:
     App\Shared\Infrastructure\Persistence\ElasticSearch\Command\CreateElasticsearchIndicesCommand:
         arguments:
             $projectDir: '%kernel.project_dir%'
+
+    App\User\Application\Command\UpdateCommandHandler:
+        arguments:
+            $updaters: !tagged_iterator app.user_updater

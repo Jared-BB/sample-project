@@ -8,6 +8,7 @@ use App\Shared\Domain\EventStore;
 use App\User\Domain\Event\UserCreatedEvent;
 use App\User\Domain\Event\UserDeletedEvent;
 use App\User\Domain\Event\UserDisabledEvent;
+use App\User\Domain\Event\UserUpdatedEvent;
 use App\User\Domain\ValueObject\Email;
 use App\User\Domain\ValueObject\Password;
 use App\User\Domain\ValueObject\Role;
@@ -24,6 +25,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    private bool $updated = false;
+
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'uuid', unique: true, nullable: false)]
     private Uuid $id;
@@ -143,6 +146,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         EventStore::addEvent(
             new UserDisabledEvent(
                 id: $this->id(),
+            )
+        );
+    }
+
+    public function changeEmail(Email $email): void
+    {
+        $this->email = $email->asString();
+        $this->markUpdated();
+    }
+
+    public function changeRole(Role $role): void
+    {
+        $this->role = $role;
+        $this->markUpdated();
+    }
+
+    public function changePassword(UserPasswordHasherInterface $hasher, Password $password): void
+    {
+        $this->password = $hasher->hashPassword(
+            user: $this,
+            plainPassword: $password->asString(),
+        );
+        $this->markUpdated();
+    }
+
+    private function markUpdated(): void
+    {
+        if ($this->updated) {
+            return;
+        }
+
+        $this->updated = true;
+
+        EventStore::addEvent(
+            new UserUpdatedEvent(
+                id: $this->id,
             )
         );
     }

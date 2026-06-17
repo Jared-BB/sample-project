@@ -10,6 +10,18 @@ App\User\Domain\User:
             deserialize: true
             validate: true
 
+        ApiPlatform\Metadata\Put:
+            uriTemplate: /v1/user/{id}
+            status: 202
+            input: App\User\Infrastructure\UI\Update\Request\UpdateRequest
+            output: false
+            processor: App\User\Infrastructure\UI\Update\UpdateProcessor
+            read: false
+            deserialize: false
+            validate: false
+            requirements:
+                id: '^[0-9a-fA-F-]{36}$'
+
         ApiPlatform\Metadata\Delete:
             uriTemplate: /v1/user/{id}
             status: 202

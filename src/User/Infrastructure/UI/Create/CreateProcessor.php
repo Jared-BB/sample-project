@@ -11,17 +11,13 @@ use App\User\Domain\ValueObject\Email;
 use App\User\Domain\ValueObject\Password;
 use App\User\Domain\ValueObject\Role;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class CreateProcessor implements ProcessorInterface
+final readonly class CreateProcessor implements ProcessorInterface
 {
-    use HandleTrait;
-
     public function __construct(
-        private readonly MessageBusInterface $commandBus,
+        private MessageBusInterface $commandBus,
     ) {
-        $this->messageBus = $commandBus;
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): null

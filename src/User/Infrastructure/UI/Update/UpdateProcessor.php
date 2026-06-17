@@ -1,16 +1,19 @@
 <?php
 
-namespace App\User\Infrastructure\UI\Delete;
+namespace App\User\Infrastructure\UI\Update;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
-use App\User\Application\Command\DeleteCommand;
+use App\User\Application\Command\UpdateCommand;
+use App\User\Domain\ValueObject\Email;
+use App\User\Domain\ValueObject\Password;
+use App\User\Domain\ValueObject\Role;
 use App\User\Infrastructure\Security\AccessGuard;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final readonly class DeleteProcessor implements ProcessorInterface
+final readonly class UpdateProcessor implements ProcessorInterface
 {
     public function __construct(
         private AccessGuard $accessGuard,
@@ -23,14 +26,17 @@ final readonly class DeleteProcessor implements ProcessorInterface
         $userId = $uriVariables['id'];
 
         $this->accessGuard->isGranted(
-            actionPermission: Permission::DELETE,
+            actionPermission: Permission::UPDATE,
             objectId: $userId,
         );
 
         try {
             $this->commandBus->dispatch(
-                new DeleteCommand(
+                new UpdateCommand(
                     userId: $userId,
+                    email: $data->email ? new Email($data->email) : null,
+                    password: $data->password ? new Password($data->password) : null,
+                    role: $data->role ? Role::from($data->role) : null,
                 )
             );
         } catch (HandlerFailedException $exception) {

@@ -1,5 +1,63 @@
 ### Sample API
 
+## Resume
+
+This repository is a showcase project designed to demonstrate modern backend development practices and software architecture principles.
+
+The application exposes a REST API built with PHP 8 and Symfony, following Domain-Driven Design (DDD), CQRS, and SOLID principles. The primary goal is not the business functionality itself, but rather the implementation of a clean, maintainable, scalable, and testable architecture.
+
+### Technologies & Concepts
+
+- PHP 8
+- Symfony
+- REST API
+- Domain-Driven Design (DDD)
+- CQRS (Command Query Responsibility Segregation)
+- SOLID Principles
+- Unit & Integration Testing
+- RabbitMQ (Asynchronous Messaging)
+- PostgreSQL (Doctrine ORM)
+- Redis (Caching & Infrastructure Services)
+- Elasticsearch (Search & Indexing)
+- JWT Authentication
+- Docker & Docker Compose
+
+### Architecture
+
+The project is structured around a layered architecture with a strong separation of Bounded Context, and each Bounded Context its layered using DDD:
+
+- Domain Layer containing business rules and domain models.
+- Application Layer implementing use cases through commands and queries.
+- Infrastructure Layer providing persistence, messaging, caching, and external integrations.
+- API Layer exposing the application through REST endpoints.
+
+The codebase emphasizes:
+
+- Framework-independent domain logic.
+- Dependency inversion and low coupling.
+- Testability through dependency injection and clear boundaries.
+- Separation between write and read operations using CQRS.
+- Event Sourcing, with asynchronous processing through RabbitMQ.
+- Scalable search capabilities with Elasticsearch.
+
+### Infrastructure
+
+The entire environment runs in Docker using isolated containers for each technology:
+
+- PHP / Symfony Application
+- PostgreSQL Database
+- RabbitMQ
+- Redis
+- Elasticsearch
+
+This setup mirrors a production-oriented architecture where each service is independently deployed and managed.
+
+### Purpose
+
+This project serves as a technical demonstration of backend engineering skills, focusing on software architecture, code quality, scalability, and maintainability rather than on a complex business domain.
+
+It is intended as a reference implementation for developers interested in modern PHP development, enterprise application architecture, and distributed system patterns.
+
 ## Installation
 
 Hi! These are the steps to follow

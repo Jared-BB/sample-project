@@ -28,5 +28,8 @@ phpstan:
 cs-fixer:
 	docker exec sample-php vendor/bin/php-cs-fixer fix --dry-run --diff
 
+php-md:
+	docker exec sample-php vendor/bin/phpmd src github phpmd.xml
+
 start-workers:
 	$(SYMFONY_CONSOLE) app:worker:watch --restart --workers=1 --no-interaction

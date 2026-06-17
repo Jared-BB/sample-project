@@ -26,4 +26,9 @@ final class EventStore
     {
         self::$events = [];
     }
+
+    public static function has(string $eventClass): bool
+    {
+        return array_any(self::$events, fn ($event) => $event instanceof $eventClass);
+    }
 }
