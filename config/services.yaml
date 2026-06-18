@@ -34,3 +34,9 @@ services:
     App\User\Application\Command\UpdateCommandHandler:
         arguments:
             $updaters: !tagged_iterator app.user_updater
+
+    App\User\Application\Command\Updater\:
+        resource: '../src/User/Application/Command/Updater/'
+        exclude:
+            - '../src/User/Application/Command/Updater/UserFieldUpdater.php'
+        tags: ['app.user_updater']

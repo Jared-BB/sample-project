@@ -17,8 +17,8 @@ App\User\Domain\User:
             output: false
             processor: App\User\Infrastructure\UI\Update\UpdateProcessor
             read: false
-            deserialize: false
-            validate: false
+            deserialize: true
+            validate: true
             requirements:
                 id: '^[0-9a-fA-F-]{36}$'
 
