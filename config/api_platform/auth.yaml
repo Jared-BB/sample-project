@@ -5,7 +5,7 @@ App\Auth\Infrastructure\UI\Login\Response\LoginResponse:
             status: 200
             input: App\Auth\Infrastructure\UI\Login\Request\LoginRequest
             output: App\Auth\Infrastructure\UI\Login\Response\LoginResponse
-            processor: App\Auth\Infrastructure\UI\Login\LoginProcessor
+            processor: api.auth.login_processor
             read: false
             deserialize: true
             validate: true

@@ -3,6 +3,8 @@ services:
         class: App\Access\Infrastructure\Persistence\PostgresqlGroupRepository
         arguments:
             $registry: '@doctrine'
+        tags:
+            - { name: doctrine.repository_service }
 
     repository.access.group.read_repository:
         class: App\Access\Infrastructure\Persistence\RedisGroupRepository

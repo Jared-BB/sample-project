@@ -4,3 +4,5 @@ services:
         arguments:
             $queryBus: '@query.bus'
             $loggedUserProvider: '@service.user.authenticated_user_provider'
+        tags:
+            - { name: api_platform.state_provider }

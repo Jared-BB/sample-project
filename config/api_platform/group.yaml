@@ -5,7 +5,7 @@ App\Access\Domain\Group:
             status: 200
             input: false
             output: App\Access\Infrastructure\UI\List\Response\GroupItemResponse
-            provider: App\Access\Infrastructure\UI\List\ListProvider
+            provider: api.access.list_provider
             read: true
             deserialize: false
             validate: false

@@ -8,9 +8,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Tests\FunctionalTestCase;
 use App\Tests\Story\User\ListUsersStory;
 use App\User\Application\Command\UpdateUserProjectionCommand;
-use App\User\Application\Command\UpdateUserProjectionCommandHandler;
 use App\User\Domain\User;
-use App\User\Infrastructure\Persistence\ElasticSearchUserRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListTest extends FunctionalTestCase
@@ -33,7 +31,7 @@ class ListTest extends FunctionalTestCase
     {
         foreach ($this->users as $user) {
             self::getContainer()
-                ->get(ElasticSearchUserRepository::class)
+                ->get('repository.user.read_repository')
                 ->deleteUser($user);
         }
 
@@ -145,7 +143,7 @@ class ListTest extends FunctionalTestCase
 
         foreach ($this->users as $user) {
             self::getContainer()
-                ->get(UpdateUserProjectionCommandHandler::class)(
+                ->get('command.user.update_projection')(
                     new UpdateUserProjectionCommand($user->id())
                 );
         }

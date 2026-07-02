@@ -16,7 +16,7 @@ class UpdateGroupProjectionCommandHandlerTest extends IntegrationTestCase
     protected function tearDown(): void
     {
         self::getContainer()
-            ->get(RedisGroupRepository::class)
+            ->get('repository.access.group.read_repository')
             ->deleteForUser($this->user->id());
 
         parent::tearDown();
@@ -32,7 +32,7 @@ class UpdateGroupProjectionCommandHandlerTest extends IntegrationTestCase
         $bus = self::getContainer()->get(MessageBusInterface::class);
 
         /** @var RedisGroupRepository $repo */
-        $repo = self::getContainer()->get(RedisGroupRepository::class);
+        $repo = self::getContainer()->get('repository.access.group.read_repository');
 
         $groups = $repo->findByUserId($this->user->id());
         self::assertCount(0, $groups);

@@ -3,3 +3,5 @@ services:
         class: App\Auth\Infrastructure\UI\Login\LoginProcessor
         arguments:
             $commandBus: '@commands.bus'
+        tags:
+            - { name: api_platform.state_processor }

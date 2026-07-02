@@ -4,9 +4,7 @@ namespace App\Tests\Access\Functional;
 
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Access\Application\Command\UpdateGroupProjectionCommand;
-use App\Access\Application\Command\UpdateGroupProjectionCommandHandler;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
-use App\Access\Infrastructure\Persistence\RedisGroupRepository;
 use App\Tests\FunctionalTestCase;
 use App\Tests\Story\User\UserWithUserPermissions;
 use App\User\Domain\User;
@@ -31,7 +29,7 @@ class ListTest extends FunctionalTestCase
     protected function tearDown(): void
     {
         self::getContainer()
-            ->get(RedisGroupRepository::class)
+            ->get('repository.access.group.read_repository')
             ->deleteForUser($this->user->id());
 
         parent::tearDown();
@@ -44,7 +42,7 @@ class ListTest extends FunctionalTestCase
         $this->user = UserWithUserPermissions::get('user');
 
         self::getContainer()
-            ->get(UpdateGroupProjectionCommandHandler::class)(
+            ->get('command.access.update_group_projection')(
                 new UpdateGroupProjectionCommand($this->user->id())
             );
 

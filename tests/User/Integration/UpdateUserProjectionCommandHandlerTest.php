@@ -16,7 +16,7 @@ class UpdateUserProjectionCommandHandlerTest extends IntegrationTestCase
     protected function tearDown(): void
     {
         self::getContainer()
-            ->get(ElasticSearchUserRepository::class)
+            ->get('repository.user.read_repository')
             ->deleteUser($this->user);
 
         parent::tearDown();
@@ -29,10 +29,10 @@ class UpdateUserProjectionCommandHandlerTest extends IntegrationTestCase
         $this->user = UserStory::get('user');
 
         /** @var MessageBusInterface $bus */
-        $bus = self::getContainer()->get(MessageBusInterface::class);
+        $bus = self::getContainer()->get('commands.bus');
 
         /** @var ElasticSearchUserRepository $repo */
-        $repo = self::getContainer()->get(ElasticSearchUserRepository::class);
+        $repo = self::getContainer()->get('repository.user.read_repository');
 
         $userCollection = $repo->searchUsers(
             search: $this->user->email()->asString(),

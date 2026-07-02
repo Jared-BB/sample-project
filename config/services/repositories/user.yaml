@@ -3,6 +3,8 @@ services:
         class: App\User\Infrastructure\Persistence\PostgresqlUserRepository
         arguments:
             $registry: '@doctrine'
+        tags:
+            - { name: doctrine.repository_service }
 
     repository.user.read_repository:
         class: App\User\Infrastructure\Persistence\ElasticSearchUserRepository

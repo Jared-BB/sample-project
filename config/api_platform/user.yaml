@@ -5,7 +5,7 @@ App\User\Domain\User:
             status: 201
             input: App\User\Infrastructure\UI\Create\Request\CreateRequest
             output: false
-            processor: App\User\Infrastructure\UI\Create\CreateProcessor
+            processor: api.user.create_processor
             read: false
             deserialize: true
             validate: true
@@ -15,7 +15,7 @@ App\User\Domain\User:
             status: 202
             input: App\User\Infrastructure\UI\Update\Request\UpdateRequest
             output: false
-            processor: App\User\Infrastructure\UI\Update\UpdateProcessor
+            processor: api.user.update_processor
             read: false
             deserialize: true
             validate: true
@@ -27,7 +27,7 @@ App\User\Domain\User:
             status: 202
             input: false
             output: false
-            processor: App\User\Infrastructure\UI\Delete\DeleteProcessor
+            processor: api.user.delete_processor
             read: false
             deserialize: false
             validate: false
@@ -39,7 +39,7 @@ App\User\Domain\User:
             status: 200
             input: false
             output: App\User\Infrastructure\UI\List\Response\UserItemResponse
-            provider: App\User\Infrastructure\UI\List\ListProvider
+            provider: api.user.list_provider
             read: true
             deserialize: false
             validate: false
