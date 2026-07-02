@@ -1,0 +1,13 @@
+services:
+    service.user.access_provisioner:
+        class: App\Shared\Infrastructure\Bridge\UserAccess\MessengerAccessProvisioner
+        arguments:
+            $commandBus: '@commands.bus'
+
+    service.shared.json_serializer:
+        class: App\Shared\Infrastructure\Message\JsonSerializer
+
+    service.shared.event_dispatcher_middleware:
+        class: App\Shared\Application\EventDispatcherMiddleware
+        arguments:
+            $eventsBus: '@events.bus'

@@ -1,0 +1,23 @@
+services:
+    api.user.create_processor:
+        class: App\User\Infrastructure\UI\Create\CreateProcessor
+        arguments:
+            $commandBus: '@commands.bus'
+
+    api.user.delete_processor:
+        class: App\User\Infrastructure\UI\Delete\DeleteProcessor
+        arguments:
+            $accessGuard: '@security.user.access_guard'
+            $commandBus: '@commands.bus'
+
+    api.user.list_provider:
+        class: App\User\Infrastructure\UI\List\ListProvider
+        arguments:
+            $accessGuard: '@security.user.access_guard'
+            $queryBus: '@query.bus'
+
+    api.user.update_processor:
+        class: App\User\Infrastructure\UI\Update\UpdateProcessor
+        arguments:
+            $accessGuard: '@security.user.access_guard'
+            $commandBus: '@commands.bus'

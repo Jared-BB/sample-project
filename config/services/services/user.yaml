@@ -1,0 +1,8 @@
+services:
+    service.user.authenticated_user_checker:
+        class: App\User\Application\Service\AuthenticatedUserChecker
+
+    service.user.authenticated_user_provider:
+        class: App\User\Application\Service\AuthenticatedUserProvider
+        arguments:
+            - '@security.helper'

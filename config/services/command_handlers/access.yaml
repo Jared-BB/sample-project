@@ -1,0 +1,15 @@
+services:
+    command.access.create_default_user_permissions:
+        class: App\Access\Application\Command\CreateDefaultUserPermissionsCommandHandler
+        arguments:
+            $groupRepository: '@repository.access.group.repository'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }
+
+    command.access.update_group_projection:
+        class: App\Access\Application\Command\UpdateGroupProjectionCommandHandler
+        arguments:
+            $groupRepository: '@repository.access.group.repository'
+            $groupReadRepository: '@repository.access.group.read_repository'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }

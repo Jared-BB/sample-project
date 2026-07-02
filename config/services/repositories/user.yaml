@@ -1,0 +1,10 @@
+services:
+    repository.user.repository:
+        class: App\User\Infrastructure\Persistence\PostgresqlUserRepository
+        arguments:
+            $registry: '@doctrine'
+
+    repository.user.read_repository:
+        class: App\User\Infrastructure\Persistence\ElasticSearchUserRepository
+        arguments:
+            $client: '@Elastic\Elasticsearch\Client'

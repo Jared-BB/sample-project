@@ -1,0 +1,7 @@
+services:
+    event.access.update_group_projection_on_group_user_added:
+        class: App\Access\Application\Event\UpdateGroupProjectionOnGroupUserAddedEventHandler
+        arguments:
+            $commandBus: '@commands.bus'
+        tags:
+            - { name: messenger.message_handler, bus: events.bus }

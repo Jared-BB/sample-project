@@ -1,0 +1,7 @@
+services:
+    query.user.find_all_active:
+        class: App\User\Application\Query\FindAllActiveQueryHandler
+        arguments:
+            - '@repository.user.read_repository'
+        tags:
+            - { name: messenger.message_handler, bus: query.bus }

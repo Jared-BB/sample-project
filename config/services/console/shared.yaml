@@ -1,0 +1,23 @@
+services:
+    console.shared.worker_watch:
+        class: App\Shared\Infrastructure\UI\Command\WorkerWatchCommand
+        arguments:
+            $kernel: '@kernel'
+        tags:
+            - {
+                name: console.command,
+                command: 'app:worker:watch',
+                description: 'Check if Messenger workers are working.'
+            }
+
+    console.shared.create_elasticsearch_indices:
+        class: App\Shared\Infrastructure\UI\Command\CreateElasticsearchIndicesCommand
+        arguments:
+            $client: '@Elastic\Elasticsearch\Client'
+            $projectDir: '%kernel.project_dir%'
+        tags:
+            - {
+                name: console.command,
+                command: 'app:elasticsearch:create-indices',
+                description: 'Creates all Elasticsearch indices defined in config/elasticsearch/*.yaml'
+            }

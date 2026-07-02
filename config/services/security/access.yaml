@@ -1,0 +1,7 @@
+services:
+    security.access.group_permission_voter:
+        class: App\Access\Infrastructure\Security\GroupPermissionVoter
+        arguments:
+            $groupRepository: '@repository.access.group.repository'
+        tags:
+            - { name: security.voter }

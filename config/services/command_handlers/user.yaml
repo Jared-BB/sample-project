@@ -1,0 +1,32 @@
+services:
+    command.user.create:
+        class: App\User\Application\Command\CreateCommandHandler
+        arguments:
+            $userRepository: '@repository.user.repository'
+            $hasher: '@security.user_password_hasher'
+            $accessProvisioner: '@service.user.access_provisioner'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }
+
+    command.user.delete:
+        class: App\User\Application\Command\DeleteCommandHandler
+        arguments:
+            $userRepository: '@repository.user.repository'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }
+
+    command.user.update:
+        class: App\User\Application\Command\UpdateCommandHandler
+        arguments:
+            $userRepository: '@repository.user.repository'
+            $updaters: !tagged_iterator user.updater
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }
+
+    command.user.update_projection:
+        class: App\User\Application\Command\UpdateUserProjectionCommandHandler
+        arguments:
+            $userRepository: '@repository.user.repository'
+            $userReadRepository: '@repository.user.read_repository'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Infrastructure\Persistence\ElasticSearch\Command;
+namespace App\Shared\Infrastructure\UI\Command;
 
 use Elastic\Elasticsearch\Client;
 use stdClass;

@@ -1,0 +1,9 @@
+services:
+    command.auth.login:
+        class: App\Auth\Application\Command\LoginCommandHandler
+        arguments:
+            $userRepository: '@repository.user.repository'
+            $hasher: '@security.user_password_hasher'
+            $jwtService: '@service.auth.jwt_creator'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }

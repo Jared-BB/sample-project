@@ -1,0 +1,10 @@
+services:
+    repository.access.group.repository:
+        class: App\Access\Infrastructure\Persistence\PostgresqlGroupRepository
+        arguments:
+            $registry: '@doctrine'
+
+    repository.access.group.read_repository:
+        class: App\Access\Infrastructure\Persistence\RedisGroupRepository
+        arguments:
+            $redis: '@Predis\ClientInterface'

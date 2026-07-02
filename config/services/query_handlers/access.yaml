@@ -1,0 +1,7 @@
+services:
+    query.access.find_all_active:
+        class: App\Access\Application\Query\FindAllActiveQueryHandler
+        arguments:
+            $groupRepository: '@repository.access.group.read_repository'
+        tags:
+            - { name: messenger.message_handler, bus: query.bus }

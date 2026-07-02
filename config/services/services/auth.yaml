@@ -1,0 +1,5 @@
+services:
+    service.auth.jwt_creator:
+        class: App\Auth\Application\Service\JwtCreator
+        arguments:
+            $jwt: '@lexik_jwt_authentication.jwt_manager'

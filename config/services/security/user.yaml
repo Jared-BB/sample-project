@@ -1,0 +1,5 @@
+services:
+    security.user.access_guard:
+        class: App\User\Infrastructure\Security\AccessGuard
+        arguments:
+            $auth: '@security.authorization_checker'

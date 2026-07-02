@@ -1,0 +1,7 @@
+services:
+    subscriber.shared.api_exception:
+        class: App\Shared\Infrastructure\Http\ApiExceptionSubscriber
+        arguments:
+            $errorsLogger: '@monolog.logger.errors'
+        tags:
+            - { name: kernel.event_subscriber }

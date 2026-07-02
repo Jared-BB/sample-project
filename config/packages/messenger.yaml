@@ -3,7 +3,7 @@ framework:
         transports:
             commands:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
-                serializer: App\Shared\Infrastructure\Message\JsonSerializer
+                serializer: service.shared.json_serializer
                 failure_transport: commands.dead
                 options:
                     queues:
@@ -20,7 +20,7 @@ framework:
                     max_delay: 0
             events:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
-                serializer: App\Shared\Infrastructure\Message\JsonSerializer
+                serializer: service.shared.json_serializer
                 failure_transport: events.dead
                 options:
                     queues:
@@ -59,7 +59,7 @@ framework:
                 middleware:
                     - doctrine_ping_connection
                     - doctrine_close_connection
-                    - App\Shared\Application\EventDispatcherMiddleware
+                    - service.shared.event_dispatcher_middleware
             query.bus:
                 default_middleware: allow_no_handlers
             events.bus:
