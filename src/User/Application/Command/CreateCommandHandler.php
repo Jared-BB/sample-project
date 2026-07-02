@@ -8,11 +8,9 @@ use App\User\Application\Port\AccessProvisioner;
 use App\User\Domain\Exception\UserAlreadyExistsException;
 use App\User\Domain\User;
 use App\User\Domain\UserRepository;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Uid\Uuid;
 
-#[AsMessageHandler(bus: 'commands.bus')]
 final readonly class CreateCommandHandler
 {
     public function __construct(

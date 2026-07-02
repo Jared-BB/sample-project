@@ -9,10 +9,8 @@ use App\Access\Domain\GroupPermission\ValueObject\Context;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
 use App\Access\Domain\GroupRepository;
 use App\Access\Domain\ValueObject\Name;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Uuid;
 
-#[AsMessageHandler(bus: 'commands.bus')]
 final readonly class CreateDefaultUserPermissionsCommandHandler
 {
     public function __construct(

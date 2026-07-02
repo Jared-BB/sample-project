@@ -20,8 +20,13 @@ services:
         arguments:
             - '%env(REDIS_URL)%'
 
-    App\User\Application\Command\Updater\:
-        resource: '../src/User/Application/Command/Updater/'
-        exclude:
-            - '../src/User/Application/Command/Updater/UserFieldUpdater.php'
+    App\User\Application\Command\Updater\EmailUpdater:
+        tags: ['app.user_updater']
+
+    App\User\Application\Command\Updater\RoleUpdater:
+        tags: ['app.user_updater']
+
+    App\User\Application\Command\Updater\PasswordUpdater:
+        arguments:
+            $hasher: '@security.user_password_hasher'
         tags: ['app.user_updater']

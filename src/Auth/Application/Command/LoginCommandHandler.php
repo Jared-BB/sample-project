@@ -6,11 +6,9 @@ namespace App\Auth\Application\Command;
 
 use App\Auth\Application\Service\JwtCreator;
 use App\User\Domain\UserRepository;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-#[AsMessageHandler(bus: 'commands.bus')]
 final readonly class LoginCommandHandler
 {
     public function __construct(

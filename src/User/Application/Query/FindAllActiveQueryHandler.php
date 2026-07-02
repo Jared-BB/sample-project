@@ -6,9 +6,7 @@ namespace App\User\Application\Query;
 
 use App\User\Application\DTO\UserCollection;
 use App\User\Domain\UserReadRepository;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(bus: 'query.bus')]
 final readonly class FindAllActiveQueryHandler
 {
     public function __construct(

@@ -4,9 +4,7 @@ namespace App\User\Application\Command;
 
 use App\User\Application\Command\Updater\UserFieldUpdater;
 use App\User\Domain\UserRepository;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(bus: 'commands.bus')]
 final readonly class UpdateCommandHandler
 {
     /**

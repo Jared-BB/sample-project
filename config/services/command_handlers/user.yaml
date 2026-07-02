@@ -19,7 +19,7 @@ services:
         class: App\User\Application\Command\UpdateCommandHandler
         arguments:
             $userRepository: '@repository.user.repository'
-            $updaters: !tagged_iterator user.updater
+            $updaters: !tagged_iterator app.user_updater
         tags:
             - { name: messenger.message_handler, bus: commands.bus }
 
