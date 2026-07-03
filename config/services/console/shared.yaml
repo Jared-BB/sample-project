@@ -1,6 +1,6 @@
 services:
     console.shared.worker_watch:
-        class: App\Shared\Infrastructure\UI\Command\WorkerWatchCommand
+        class: App\Shared\UI\Command\WorkerWatchCommand
         arguments:
             $kernel: '@kernel'
         tags:
@@ -11,7 +11,7 @@ services:
             }
 
     console.shared.create_elasticsearch_indices:
-        class: App\Shared\Infrastructure\UI\Command\CreateElasticsearchIndicesCommand
+        class: App\Shared\UI\Command\CreateElasticsearchIndicesCommand
         arguments:
             $client: '@Elastic\Elasticsearch\Client'
             $projectDir: '%kernel.project_dir%'
