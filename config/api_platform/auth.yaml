@@ -1,10 +1,10 @@
-App\Auth\Infrastructure\UI\Login\Response\LoginResponse:
+App\Auth\UI\Login\Response\LoginResponse:
     operations:
         ApiPlatform\Metadata\Post:
             uriTemplate: /v1/login
             status: 200
-            input: App\Auth\Infrastructure\UI\Login\Request\LoginRequest
-            output: App\Auth\Infrastructure\UI\Login\Response\LoginResponse
+            input: App\Auth\UI\Login\Request\LoginRequest
+            output: App\Auth\UI\Login\Response\LoginResponse
             processor: api.auth.login_processor
             read: false
             deserialize: true

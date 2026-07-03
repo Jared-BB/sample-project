@@ -3,7 +3,7 @@ App\User\Domain\User:
         ApiPlatform\Metadata\Post:
             uriTemplate: /v1/user
             status: 201
-            input: App\User\Infrastructure\UI\Create\Request\CreateRequest
+            input: App\User\UI\Create\Request\CreateRequest
             output: false
             processor: api.user.create_processor
             read: false
@@ -13,7 +13,7 @@ App\User\Domain\User:
         ApiPlatform\Metadata\Put:
             uriTemplate: /v1/user/{id}
             status: 202
-            input: App\User\Infrastructure\UI\Update\Request\UpdateRequest
+            input: App\User\UI\Update\Request\UpdateRequest
             output: false
             processor: api.user.update_processor
             read: false
@@ -38,7 +38,7 @@ App\User\Domain\User:
             uriTemplate: /v1/users
             status: 200
             input: false
-            output: App\User\Infrastructure\UI\List\Response\UserItemResponse
+            output: App\User\UI\List\Response\UserItemResponse
             provider: api.user.list_provider
             read: true
             deserialize: false

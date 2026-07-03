@@ -4,7 +4,7 @@ App\Access\Domain\Group:
             uriTemplate: /v1/groups
             status: 200
             input: false
-            output: App\Access\Infrastructure\UI\List\Response\GroupItemResponse
+            output: App\Access\UI\List\Response\GroupItemResponse
             provider: api.access.list_provider
             read: true
             deserialize: false

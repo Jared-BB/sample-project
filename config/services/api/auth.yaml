@@ -1,6 +1,6 @@
 services:
     api.auth.login_processor:
-        class: App\Auth\Infrastructure\UI\Login\LoginProcessor
+        class: App\Auth\UI\Login\LoginProcessor
         arguments:
             $commandBus: '@commands.bus'
         tags:

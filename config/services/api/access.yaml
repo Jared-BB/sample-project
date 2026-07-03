@@ -1,6 +1,6 @@
 services:
     api.access.list_provider:
-        class: App\Access\Infrastructure\UI\List\ListProvider
+        class: App\Access\UI\List\ListProvider
         arguments:
             $queryBus: '@query.bus'
             $loggedUserProvider: '@service.user.authenticated_user_provider'

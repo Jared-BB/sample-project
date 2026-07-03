@@ -6,7 +6,7 @@ This repository is a showcase project designed to demonstrate modern backend dev
 
 The application exposes a REST API built with PHP 8 and Symfony, following Domain-Driven Design (DDD), CQRS, and SOLID principles. The primary goal is not the business functionality itself, but rather the implementation of a clean, maintainable, scalable, and testable architecture.
 
-### Technologies & Concepts
+### Tech Stack
 
 - PHP 8
 - Symfony
