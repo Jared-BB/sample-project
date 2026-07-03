@@ -12,3 +12,10 @@ services:
             $commandBus: '@commands.bus'
         tags:
             - { name: messenger.message_handler, bus: events.bus }
+
+    event.user.update_projection_on_user_deleted:
+        class: App\User\Application\Event\UpdateUserProjectionOnUserDeletedEventHandler
+        arguments:
+            $commandBus: '@commands.bus'
+        tags:
+            - { name: messenger.message_handler, bus: events.bus }

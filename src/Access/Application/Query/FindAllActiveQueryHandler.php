@@ -4,9 +4,7 @@ namespace App\Access\Application\Query;
 
 use App\Access\Domain\GroupReadRepository;
 use App\Shared\Domain\Pagination;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(bus: 'query.bus')]
 final readonly class FindAllActiveQueryHandler
 {
     public function __construct(

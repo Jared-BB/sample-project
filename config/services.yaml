@@ -8,6 +8,7 @@ imports:
     - { resource: services/security/*.yaml }
     - { resource: services/services/*.yaml }
     - { resource: services/subscribers/*.yaml }
+    - { resource: services/updaters/*.yaml }
 
 services:
     _defaults:
@@ -19,14 +20,3 @@ services:
         class: Predis\Client
         arguments:
             - '%env(REDIS_URL)%'
-
-    App\User\Application\Command\Updater\EmailUpdater:
-        tags: ['app.user_updater']
-
-    App\User\Application\Command\Updater\RoleUpdater:
-        tags: ['app.user_updater']
-
-    App\User\Application\Command\Updater\PasswordUpdater:
-        arguments:
-            $hasher: '@security.user_password_hasher'
-        tags: ['app.user_updater']

@@ -1,0 +1,17 @@
+services:
+    updater.user.email:
+        class: App\User\Application\Command\Updater\EmailUpdater
+        tags:
+            - { name: app.user_updater }
+
+    updater.user.role:
+        class: App\User\Application\Command\Updater\RoleUpdater
+        tags:
+            - { name: app.user_updater }
+
+    updater.user.password:
+        class: App\User\Application\Command\Updater\PasswordUpdater
+        arguments:
+            $hasher: '@security.user_password_hasher'
+        tags:
+            - { name: app.user_updater }
