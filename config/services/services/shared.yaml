@@ -7,6 +7,11 @@ services:
     service.shared.json_serializer:
         class: App\Shared\Infrastructure\Message\JsonSerializer
 
+    service.shared.email_sender:
+        class: App\Shared\Infrastructure\Mail\EmailSender
+        arguments:
+            $mailer: '@mailer.mailer'
+
     service.shared.event_dispatcher_middleware:
         class: App\Shared\Application\EventDispatcherMiddleware
         arguments:

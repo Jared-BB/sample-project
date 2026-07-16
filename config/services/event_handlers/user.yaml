@@ -19,3 +19,10 @@ services:
             $commandBus: '@commands.bus'
         tags:
             - { name: messenger.message_handler, bus: events.bus }
+
+    event.user.send_welcome_email_on_user_created:
+        class: App\User\Application\Event\SendWelcomeEmailToUserOnUserCreatedEventHandler
+        arguments:
+            $commandBus: '@commands.bus'
+        tags:
+            - { name: messenger.message_handler, bus: events.bus }

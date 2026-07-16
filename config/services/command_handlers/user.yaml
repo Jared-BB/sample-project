@@ -30,3 +30,12 @@ services:
             $userReadRepository: '@repository.user.read_repository'
         tags:
             - { name: messenger.message_handler, bus: commands.bus }
+
+    command.user.send_welcome_email:
+        class: App\User\Application\Command\SendWelcomeEmailToUserCommandHandler
+        arguments:
+            $userRepository: '@repository.user.repository'
+            $welcomeEmailBuilder: '@service.user.welcome_email_builder'
+            $emailSender: '@service.shared.email_sender'
+        tags:
+            - { name: messenger.message_handler, bus: commands.bus }

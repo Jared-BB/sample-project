@@ -6,3 +6,9 @@ services:
         class: App\User\Application\Service\AuthenticatedUserProvider
         arguments:
             - '@security.helper'
+
+    service.user.welcome_email_builder:
+        class: App\User\Infrastructure\Mail\WelcomeEmailBuilder
+        arguments:
+            $fromEmail: '%env(MAILER_FROM_EMAIL)%'
+            $fromName: '%env(MAILER_FROM_NAME)%'
