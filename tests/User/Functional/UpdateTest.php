@@ -39,8 +39,8 @@ class UpdateTest extends FunctionalTestCase
 
         $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $user->id()]);
 
-        $response = $this->client->request('PUT', $endpoint, [
-            'headers' =>  self::headersWithJWTForUser($user),
+        $response = $this->client->request('PATCH', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($user, true),
             'json' => [
                 'email' => 'jared@test.com',
                 'password' => 'PasswordOk1',
@@ -66,8 +66,8 @@ class UpdateTest extends FunctionalTestCase
 
         $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $user->id()]);
 
-        $response = $this->client->request('PUT', $endpoint, [
-            'headers' =>  self::headersWithJWTForUser($user),
+        $response = $this->client->request('PATCH', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($user, true),
             'json' => [
                 'email' => 'mail',
                 'password' => 'PasswordOk1',
@@ -94,8 +94,8 @@ class UpdateTest extends FunctionalTestCase
 
         $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $user->id()]);
 
-        $response = $this->client->request('PUT', $endpoint, [
-            'headers' =>  self::headersWithJWTForUser($user),
+        $response = $this->client->request('PATCH', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($user, true),
             'json' => [
                 'email' => 'jared@test.com',
                 'password' => 'a',
@@ -122,8 +122,8 @@ class UpdateTest extends FunctionalTestCase
 
         $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $user->id()]);
 
-        $response = $this->client->request('PUT', $endpoint, [
-            'headers' =>  self::headersWithJWTForUser($user),
+        $response = $this->client->request('PATCH', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($user, true),
             'json' => [
                 'email' => 'jared@test.com',
                 'password' => 'PasswordOk1',
@@ -152,8 +152,8 @@ class UpdateTest extends FunctionalTestCase
 
         $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $userId->toString()]);
 
-        $response = $this->client->request('PUT', $endpoint, [
-            'headers' =>  self::headersWithJWTForUser($user),
+        $response = $this->client->request('PATCH', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($user, true),
             'json' => [
                 'email' => 'jared@test.es',
                 'password' => 'PasswordOk1',
@@ -182,8 +182,8 @@ class UpdateTest extends FunctionalTestCase
 
         $endpoint = self::prepareEndpoint(self::ENDPOINT, ['{id}' => $userId->toString()]);
 
-        $response = $this->client->request('PUT', $endpoint, [
-            'headers' =>  self::headersWithJWTForUser($user),
+        $response = $this->client->request('PATCH', $endpoint, [
+            'headers' =>  self::headersWithJWTForUser($user, true),
             'json' => [
                 'email' => 'jared@test.es',
                 'password' => 'PasswordOk1',

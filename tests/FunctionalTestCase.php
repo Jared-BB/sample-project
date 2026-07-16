@@ -60,7 +60,7 @@ class FunctionalTestCase extends KernelTestCase
         ];
     }
 
-    protected static function headersWithJWTForUser(User $user): array
+    protected static function headersWithJWTForUser(User $user, bool $patchRequest = false): array
     {
         $container = static::getContainer();
 
@@ -70,7 +70,7 @@ class FunctionalTestCase extends KernelTestCase
         $jwt = $jwtManager->createFromPayload($user);
 
         return [
-            'Content-Type' => 'application/json',
+            'Content-Type' => $patchRequest ? 'application/merge-patch+json' : 'application/json',
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $jwt,
         ];

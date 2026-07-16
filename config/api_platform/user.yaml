@@ -10,7 +10,7 @@ App\User\Domain\User:
             deserialize: true
             validate: true
 
-        ApiPlatform\Metadata\Put:
+        ApiPlatform\Metadata\Patch:
             uriTemplate: /v1/user/{id}
             status: 202
             input: App\User\UI\Update\Request\UpdateRequest

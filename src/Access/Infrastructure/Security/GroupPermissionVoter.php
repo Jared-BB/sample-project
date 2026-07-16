@@ -14,8 +14,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 final class GroupPermissionVoter extends Voter
 {
-    public const string ATTRIBUTE = VoterName::GROUP_PERMISSION_VOTER->value;
-
     public function __construct(
         private readonly GroupRepository $groupRepository,
     ) {
@@ -23,7 +21,7 @@ final class GroupPermissionVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::ATTRIBUTE && $subject instanceof GroupPermissionCollection;
+        return $attribute === VoterName::GROUP_PERMISSION_VOTER->value && $subject instanceof GroupPermissionCollection;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
