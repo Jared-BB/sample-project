@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Infrastructure\Persistence;
+namespace App\User\Infrastructure\Persistence\Doctrine;
 
 use App\User\Domain\Exception\UserNotFoundException;
 use App\User\Domain\User;
@@ -12,7 +12,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
-class PostgresqlUserRepository extends ServiceEntityRepository implements UserRepository
+final class PostgresqlUserRepository extends ServiceEntityRepository implements UserRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -21,7 +21,11 @@ class PostgresqlUserRepository extends ServiceEntityRepository implements UserRe
 
     public function findByIdOrFail(Uuid $userId): User
     {
-        $user = $this->findOneBy(['id' => $userId, 'deleted' => false]);
+        $user = $this->findOneBy([
+            'id' => $userId,
+            'deleted' => false,
+        ]);
+
         if ($user === null) {
             throw UserNotFoundException::byId($userId);
         }
@@ -31,12 +35,17 @@ class PostgresqlUserRepository extends ServiceEntityRepository implements UserRe
 
     public function findByEmail(Email $email): ?User
     {
-        return $this->findOneBy(['email' => $email->asString(), 'enabled' => true, 'deleted' => false]);
+        return $this->findOneBy([
+            'email' => $email->asString(),
+            'enabled' => true,
+            'deleted' => false,
+        ]);
     }
 
     public function findByEmailOrFail(Email $email): User
     {
         $user = $this->findByEmail($email);
+
         if ($user === null) {
             throw UserNotFoundException::byEmail($email);
         }

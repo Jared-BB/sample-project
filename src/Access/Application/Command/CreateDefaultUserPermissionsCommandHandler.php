@@ -2,9 +2,9 @@
 
 namespace App\Access\Application\Command;
 
-use App\Access\Application\DTO\GroupPermissionCollection;
-use App\Access\Application\DTO\GroupPermissionDto;
 use App\Access\Domain\Group;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionCollection;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionDto;
 use App\Access\Domain\GroupPermission\ValueObject\Context;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
 use App\Access\Domain\GroupRepository;
@@ -29,7 +29,7 @@ final readonly class CreateDefaultUserPermissionsCommandHandler
             )
         );
 
-        $group = new Group(
+        $group = Group::create(
             id: Uuid::v7(),
             name: new Name('user_' . $command->userId->toString()),
             permissionCollection: $permissionCollection,

@@ -26,7 +26,7 @@ final readonly class CreateCommandHandler
             throw UserAlreadyExistsException::byEmail($command->email);
         }
 
-        $user = new User(
+        $user = User::create(
             id: Uuid::v7(),
             email: $command->email,
             role: $command->role,

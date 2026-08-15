@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Access\Domain;
 
-use App\Access\Application\DTO\GroupPermissionCollection;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionCollection;
 use Symfony\Component\Uid\Uuid;
 
 interface GroupRepository

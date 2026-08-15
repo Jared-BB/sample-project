@@ -4,68 +4,64 @@ declare(strict_types=1);
 
 namespace App\Access\Domain;
 
-use App\Access\Application\DTO\GroupPermissionCollection;
 use App\Access\Domain\Event\GroupCreatedEvent;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionCollection;
 use App\Access\Domain\GroupPermission\GroupPermission;
 use App\Access\Domain\GroupUser\Event\GroupUserDeletedEvent;
 use App\Access\Domain\GroupUser\GroupUser;
 use App\Access\Domain\ValueObject\Name;
 use App\Shared\Domain\EventStore;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'access_group')]
 class Group
 {
-    #[ORM\Id]
-    #[ORM\Column(name: 'id', type: 'uuid', unique: true, nullable: false)]
-    private Uuid $id;
-
-    #[ORM\Embedded(class: Name::class, columnPrefix: false)]
+    private readonly Uuid $id;
     private Name $name;
-
-    #[ORM\Column(name: 'enabled', type: Types::BOOLEAN, nullable: false)]
     private bool $enabled = true;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\OneToMany(targetEntity: GroupPermission::class, mappedBy: 'group', cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
-    private Collection $permissions;
+    /** @var GroupPermission[] */
+    private array $permissions = [];
 
-    #[ORM\OneToMany(targetEntity: GroupUser::class, mappedBy: 'group', cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
-    private Collection $users;
+    /** @var GroupUser[] */
+    private array $users = [];
 
-    public function __construct(Uuid $id, Name $name, GroupPermissionCollection $permissionCollection)
+    private function __construct(Uuid $id, Name $name, GroupPermissionCollection $permissionCollection)
     {
         $this->id = $id;
         $this->name = $name;
         $this->createdAt = new DateTimeImmutable();
-        $this->users = new ArrayCollection();
 
-        $this->permissions = new ArrayCollection();
         foreach ($permissionCollection->items() as $permissionDto) {
-            $this->permissions->add(
-                new GroupPermission(
-                    id: Uuid::v7(),
-                    group: $this,
-                    context: $permissionDto->context,
-                    permission: $permissionDto->permission,
-                    objectId: $permissionDto->objectId,
-                )
+            $this->permissions[] = GroupPermission::create(
+                id: Uuid::v7(),
+                group: $this,
+                context: $permissionDto->context,
+                permission: $permissionDto->permission,
+                objectId: $permissionDto->objectId,
             );
         }
+    }
+
+    public static function create(
+        Uuid $id,
+        Name $name,
+        GroupPermissionCollection $permissionCollection,
+    ): self {
+        $group = new self(
+            id: $id,
+            name: $name,
+            permissionCollection: $permissionCollection,
+        );
 
         EventStore::addEvent(
             new GroupCreatedEvent(
                 id: $id,
             )
         );
+
+        return $group;
     }
 
     public function id(): Uuid
@@ -93,7 +89,7 @@ class Group
      */
     public function users(): array
     {
-        return $this->users->toArray();
+        return $this->users;
     }
 
     /**
@@ -101,41 +97,39 @@ class Group
      */
     public function permissions(): array
     {
-        return $this->permissions->toArray();
+        return $this->permissions;
     }
 
     public function addUser(Uuid $userId): void
     {
-        foreach ($this->users as $groupUser) {
-            if ($groupUser->userId()->equals($userId)) {
-                return;
-            }
+        if (array_any($this->users, fn ($groupUser) => $groupUser->userId()->equals($userId))) {
+            return;
         }
 
-        $this->users->add(
-            new GroupUser(
-                group: $this,
-                userId: $userId,
-            )
+        $this->users[] = GroupUser::create(
+            group: $this,
+            userId: $userId,
         );
     }
 
     public function removeUser(Uuid $userId): void
     {
-        /** @var GroupUser $groupUser */
-        foreach ($this->users as $groupUser) {
-            if ($groupUser->userId()->equals($userId)) {
-                $this->users->removeElement($groupUser);
-
-                EventStore::addEvent(
-                    new GroupUserDeletedEvent(
-                        groupId: $this->id(),
-                        userId: $userId,
-                    )
-                );
-
-                return;
+        foreach ($this->users as $index => $groupUser) {
+            if ( ! $groupUser->userId()->equals($userId)) {
+                continue;
             }
+
+            unset($this->users[$index]);
+            $this->users = array_values($this->users);
+
+            EventStore::addEvent(
+                new GroupUserDeletedEvent(
+                    groupId: $this->id(),
+                    userId: $userId,
+                )
+            );
+
+            return;
         }
     }
 }

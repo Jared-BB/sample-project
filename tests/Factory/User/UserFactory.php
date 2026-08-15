@@ -34,7 +34,7 @@ final class UserFactory extends PersistentObjectFactory
     protected function initialize(): static
     {
         return $this->instantiateWith(function (array $a): User {
-            $user = new User(
+            $user = User::create(
                 id: Uuid::v7(),
                 email: new Email((string) $a['email']),
                 role: Role::from((string) $a['role']),

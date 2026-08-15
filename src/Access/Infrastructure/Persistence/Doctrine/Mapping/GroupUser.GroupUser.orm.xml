@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        https://doctrine-project.org/schemas/orm/doctrine-mapping
+        https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Access\Domain\GroupUser\GroupUser" table="access_group_user">
+        <id name="group" association-key="true"/>
+        <id name="userId" type="uuid" column="user_id"/>
+
+        <many-to-one
+            field="group"
+            target-entity="App\Access\Domain\Group"
+            inversed-by="users"
+        >
+            <join-column
+                name="access_group_id"
+                referenced-column-name="id"
+                nullable="false"
+                on-delete="CASCADE"
+            />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

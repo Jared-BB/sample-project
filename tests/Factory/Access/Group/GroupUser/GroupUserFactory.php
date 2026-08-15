@@ -22,7 +22,7 @@ final class GroupUserFactory extends PersistentObjectFactory
     protected function initialize(): static
     {
         return $this->instantiateWith(function (array $a): GroupUser {
-            return new GroupUser(
+            return GroupUser::create(
                 group: $a['group'],
                 userId: $a['userId'],
             );

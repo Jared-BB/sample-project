@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Story\User;
 
-use App\Access\Application\DTO\GroupPermissionCollection;
-use App\Access\Application\DTO\GroupPermissionDto;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionCollection;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionDto;
 use App\Access\Domain\GroupPermission\ValueObject\Context;
 use App\Access\Domain\GroupPermission\ValueObject\Permission;
 use App\Tests\Factory\Access\Group\GroupFactory;

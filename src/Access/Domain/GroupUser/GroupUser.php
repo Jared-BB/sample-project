@@ -7,26 +7,25 @@ namespace App\Access\Domain\GroupUser;
 use App\Access\Domain\Group;
 use App\Access\Domain\GroupUser\Event\GroupUserAddedEvent;
 use App\Shared\Domain\EventStore;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'access_group_user')]
 class GroupUser
 {
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(name: 'access_group_id', referencedColumnName: 'id', nullable: false)]
     private Group $group;
-
-    #[ORM\Id]
-    #[ORM\Column(name: 'user_id', type: 'uuid', nullable: false)]
     private Uuid $userId;
 
-    public function __construct(Group $group, Uuid $userId)
+    private function __construct(Group $group, Uuid $userId)
     {
         $this->group = $group;
         $this->userId = $userId;
+    }
+
+    public static function create(Group $group, Uuid $userId): self
+    {
+        $groupUser = new self(
+            group: $group,
+            userId: $userId,
+        );
 
         EventStore::addEvent(
             new GroupUserAddedEvent(
@@ -34,6 +33,8 @@ class GroupUser
                 userId: $userId,
             )
         );
+
+        return $groupUser;
     }
 
     public function group(): Group

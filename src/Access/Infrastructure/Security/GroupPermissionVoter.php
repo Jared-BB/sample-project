@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Access\Infrastructure\Security;
 
-use App\Access\Application\DTO\GroupPermissionCollection;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionCollection;
 use App\Access\Domain\GroupRepository;
 use App\Shared\Infrastructure\Security\VoterName;
 use App\User\Domain\User;

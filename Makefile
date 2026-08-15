@@ -1,22 +1,34 @@
-DOCKER_COMPOSE = $(shell if docker compose version >/dev/null 2>&1; then echo "docker compose"; else echo "docker-compose"; fi)
+DOCKER_COMPOSE = docker compose
 DOCKER_EXEC = docker exec
 SYMFONY_CONSOLE = $(DOCKER_COMPOSE) exec php bin/console
 EXEC_PHP ?= $(DOCKER_COMPOSE) exec -T php
 
-start: ## Setup the project
+start: ## Setup the project - Linux/Mac
 	cp .env.dist .env && \
 	$(DOCKER_COMPOSE) -f docker-compose.yaml up -d && \
 	$(EXEC_PHP) php composer.phar update --dev -vvv && \
 	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction && \
 	$(SYMFONY_CONSOLE) lexik:jwt:generate-keypair --skip-if-exists --no-interaction && \
 	echo "Waiting for RabbitMQ to start..."
-	while ! docker exec -it sample-rabbitmq rabbitmqctl status &> /dev/null; do \
+	while ! docker exec sample-rabbitmq rabbitmqctl status > /dev/null 2>&1; do \
 		sleep 1; \
 	done
 	echo "RabbitMQ started successfully!"
-	$(DOCKER_EXEC) -it sample-rabbitmq rabbitmqctl add_vhost sample && \
-    $(DOCKER_EXEC) -it sample-rabbitmq rabbitmqctl set_permissions -p sample sample ".*" ".*" ".*" && \
-	$(SYMFONY_CONSOLE) messenger:setup-transports --no-interaction && \
+	$(DOCKER_EXEC) sample-rabbitmq rabbitmqctl add_vhost sample
+	$(DOCKER_EXEC) sample-rabbitmq rabbitmqctl set_permissions -p sample sample ".*" ".*" ".*"
+	$(SYMFONY_CONSOLE) messenger:setup-transports --no-interaction
+	$(SYMFONY_CONSOLE) app:elasticsearch:create-indices --no-interaction
+
+windows_start: ## Setup the project - Windows
+	copy .env.dist .env
+	$(DOCKER_COMPOSE) -f docker-compose.yaml up -d
+	$(EXEC_PHP) php composer.phar update --dev -vvv
+	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction
+	$(SYMFONY_CONSOLE) lexik:jwt:generate-keypair --skip-if-exists --no-interaction
+	$(DOCKER_EXEC) sample-rabbitmq rabbitmqctl await_startup
+	$(DOCKER_EXEC) sample-rabbitmq rabbitmqctl add_vhost sample
+	$(DOCKER_EXEC) sample-rabbitmq rabbitmqctl set_permissions -p sample sample ".*" ".*" ".*"
+	$(SYMFONY_CONSOLE) messenger:setup-transports --no-interaction
 	$(SYMFONY_CONSOLE) app:elasticsearch:create-indices --no-interaction
 
 test-coverage:

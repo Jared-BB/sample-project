@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Access\Application\DTO;
+namespace App\Access\Domain\GroupPermission\DTO;
 
 use App\Access\Domain\Exception\InvalidContextException;
 use App\Access\Domain\GroupPermission\ValueObject\Context;

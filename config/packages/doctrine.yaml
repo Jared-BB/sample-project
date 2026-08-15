@@ -15,8 +15,16 @@ doctrine:
             core:
                 connection: core
                 mappings:
-                    App:
+                    User:
+                        type: xml
                         is_bundle: false
-                        dir: '%kernel.project_dir%/src'
-                        prefix: 'App'
-                        alias: App
+                        dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence/Doctrine/Mapping'
+                        prefix: 'App\User\Domain'
+                        alias: User
+
+                    Access:
+                        type: xml
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Access/Infrastructure/Persistence/Doctrine/Mapping'
+                        prefix: 'App\Access\Domain'
+                        alias: Access

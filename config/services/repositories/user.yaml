@@ -1,6 +1,6 @@
 services:
     repository.user.repository:
-        class: App\User\Infrastructure\Persistence\PostgresqlUserRepository
+        class: App\User\Infrastructure\Persistence\Doctrine\PostgresqlUserRepository
         arguments:
             $registry: '@doctrine'
         tags:

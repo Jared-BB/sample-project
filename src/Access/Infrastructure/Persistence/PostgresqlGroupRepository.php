@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Access\Infrastructure\Persistence;
 
-use App\Access\Application\DTO\GroupPermissionCollection;
 use App\Access\Domain\Group;
+use App\Access\Domain\GroupPermission\DTO\GroupPermissionCollection;
 use App\Access\Domain\GroupPermission\GroupPermission;
 use App\Access\Domain\GroupRepository;
 use App\Access\Domain\GroupUser\GroupUser;
