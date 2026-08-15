@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Role $role;
     private bool $enabled = true;
     private bool $deleted = false;
-    private readonly DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     private function __construct(
         Uuid $id,
