@@ -5,13 +5,16 @@ on:
         - cron: "0 6 * * 1"
     workflow_dispatch:
 
+permissions:
+    contents: read
+
 jobs:
     composer-audit:
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -20,10 +23,8 @@ jobs:
                   tools: composer:v2
                   coverage: none
 
-            - name: Install dependencies (no-dev)
-              uses: ramsey/composer-install@v3
-              with:
-                  composer-options: --no-interaction --prefer-dist --no-progress --no-dev
+            - name: Validate composer.json
+              run: composer validate --no-check-publish
 
             - name: Composer audit
-              run: composer audit --no-dev --locked --no-interaction
+              run: composer audit --no-dev --locked --no-interaction -vvv
